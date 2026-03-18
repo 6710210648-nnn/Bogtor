@@ -25,7 +25,7 @@ export default function Dashboard() {
     {
       titleTH: "สวนสาธารณะเทศบาลนครหาดใหญ่",
       titleEN: "Hat Yai Municipal Park, Jm",
-      img: "/images/hatyai_park.jpg",
+      img: "/HatyaiPark.jpg",
       description: "สวนสวย บรรยากาศดี",
     },
     {
