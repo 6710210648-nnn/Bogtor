@@ -25,25 +25,26 @@ export default function Dashboard() {
     {
       titleTH: "สวนสาธารณะเทศบาลนครหาดใหญ่",
       titleEN: "Hat Yai Municipal Park, Jm",
-      img: "/HatyaiPark.jpg",
+      img:"/HatyaiPark.jpg",
       description: "สวนสวย บรรยากาศดี",
     },
+
     {
       titleTH: "ตลาดกิมหยง",
       titleEN: "Gim Yong Market",
-      img: "/images/gimyong_market.jpg",
+      img: "/gimyong.jpg",
       description: "ตลาดสดชื่อดังของหาดใหญ่",
     },
     {
       titleTH: "เจดีย์สเตนเลส",
       titleEN: "Stainless Steel Pagoda, Wat Hat Yai Nai",
-      img: "/images/pagoda.jpg",
+      img: "/jeady.jpg",
       description: "เจดีย์สวยงามโดดเด่น",
     },
     {
       titleTH: "มัสยิดกลางจังหวัดสงขลา",
       titleEN: "Central Mosque of Songkhla at Hat Yai Sorsqua",
-      img: "/images/mosque.jpg",
+      img: "/mussayid.jpg",
       description: "มัสยิดที่สำคัญของสงขลา",
     },
   ];
@@ -53,20 +54,20 @@ export default function Dashboard() {
     {
       nameTH: "ข้าวยำปักษ์ใต้",
       location: "สงขลา",
-      img: "/images/khaoyam.jpg",
+      img: "/ข้าวยำ.jpg",
       description: "ข้าวยำรสชาติเข้มข้น อร่อยแบบต้นตำรับ",
     },
     {
       nameTH: "หอยทอด",
       location: "สงขลา",
-      img: "/images/hoithod.jpg",
+      img: "/หอยทอด.jpg",
       description: "หอยทอดกรอบ ๆ ทานคู่กับน้ำจิ้มสูตรเด็ด",
     },
     {
-      nameTH: "ผัดไทย",
-      location: "กรุงเทพ",
-      img: "/images/padthai.jpg",
-      description: "ผัดไทยรสชาติดั้งเดิม ที่คนไทยและต่างชาติชื่นชอบ",
+      nameTH: "ไก่ทอดหาดใหญ่",
+      location: "สงขลา-หาดใหญ่",
+      img: "/ไก่ทอดหาดใหญ่.jpg",
+      description: "หนังกรอบๆ เนื้อนุ่มหอมกลิ่นกระเทียม",
     },
   ];
 
