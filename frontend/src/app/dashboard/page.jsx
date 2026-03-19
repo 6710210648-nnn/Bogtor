@@ -125,7 +125,7 @@ export default function Dashboard() {
           <a href="#" style={navLinkStyle}>
             สถานที่ท่องเที่ยว
           </a>
-          <a href="#" style={navLinkStyle}>
+          <a href="Bogtor/frontend/src/app/food/page.jsx" style={navLinkStyle}>
             ร้านอาหาร
           </a>
           <a href="#" style={navLinkStyle}>
