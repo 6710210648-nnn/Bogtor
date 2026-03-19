@@ -123,17 +123,17 @@ export default function Dashboard() {
           <a href="#" style={navLinkStyle}>
             หน้าแรก
           </a>
-          <a href="Bogtor/frontend/src/app/travel/page.jsx" style={navLinkStyle}>
+          <a href="http://localhost:3001/travel" style={navLinkStyle}>
             สถานที่ท่องเที่ยว
           </a>
-          <a href="Bogtor/frontend/src/app/food/page.jsx" style={navLinkStyle}>
+          <a href="http://localhost:3001/food" style={navLinkStyle}>
             ร้านอาหาร
           </a>
-          <a href="#" style={navLinkStyle}>
+          <a href="http://localhost:3001/comment" style={navLinkStyle}>
             บทความ
           </a>
-          <a href="#" style={navLinkStyle}>
-            เกี่ยวกับเรา
+          <a href="http://localhost:3001/account" style={navLinkStyle}>
+            ข้อมูลส่วนตัว
           </a>
           <button onClick={handleLogout} style={logoutBtnStyle}>
             Logout
