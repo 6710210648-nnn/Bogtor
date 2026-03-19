@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -119,16 +120,16 @@ export default function Dashboard() {
             color: "#555",
           }}
         >
-          <a href="Bogtor/frontend/src/app/dashboard/page.jsx" style={navLinkStyle}>
+          <a href="#" style={navLinkStyle}>
             หน้าแรก
           </a>
-          <a href="Bogtor/frontend/src/app/travel/page.jsx" style={navLinkStyle}>
+          <a href="http://localhost:3001/travel" style={navLinkStyle}>
             สถานที่ท่องเที่ยว
           </a>
-          <a href="Bogtor/frontend/src/app/food/page.jsx" style={navLinkStyle}>
+          <a href="http://localhost:3001/food" style={navLinkStyle}>
             ร้านอาหาร
           </a>
-          <a href="#" style={navLinkStyle}>
+          <a href="http://localhost:3001/comment" style={navLinkStyle}>
             บทความ
           </a>
           <a href="http://localhost:3001/account" style={navLinkStyle}>
