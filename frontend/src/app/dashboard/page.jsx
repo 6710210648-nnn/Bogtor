@@ -131,8 +131,8 @@ export default function Dashboard() {
           <a href="#" style={navLinkStyle}>
             บทความ
           </a>
-          <a href="#" style={navLinkStyle}>
-            เกี่ยวกับเรา
+          <a href="http://localhost:3001/account" style={navLinkStyle}>
+            ข้อมูลส่วนตัว
           </a>
           <button onClick={handleLogout} style={logoutBtnStyle}>
             Logout
