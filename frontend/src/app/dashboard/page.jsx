@@ -119,7 +119,7 @@ export default function Dashboard() {
             color: "#555",
           }}
         >
-          <a href="Bogtor/frontend/src/app/dashboard/page.jsx" style={navLinkStyle}>
+          <a href="#" style={navLinkStyle}>
             หน้าแรก
           </a>
           <a href="Bogtor/frontend/src/app/travel/page.jsx" style={navLinkStyle}>
