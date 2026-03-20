@@ -63,7 +63,7 @@ export default function Header() {
           บทความ
         </a>
         <a href="/account" style={navLinkStyle}>
-          ข้อมูลส่วนตัว
+          ข้อมูลผู้ใช้
         </a>
         <button onClick={handleLogout} style={logoutBtnStyle}>
           Logout

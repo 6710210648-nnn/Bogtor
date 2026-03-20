@@ -1,30 +1,46 @@
+-- ================= CREATE DATABASE =================
+CREATE DATABASE IF NOT EXISTS bogtor;
+USE bogtor;
+
+-- ================= ADMINS =================
+CREATE TABLE admins (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(100) UNIQUE,
+  password VARCHAR(255),
+  gender ENUM('male','female'),
+  phone VARCHAR(20),
+  image_url VARCHAR(255)
+);
+
+-- ================= USERS =================
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100),
   email VARCHAR(100) UNIQUE,
   password VARCHAR(255),
   gender ENUM('male','female'),
-  image_url VARCHAR(255),
+  phone VARCHAR(20),
+  image_url VARCHAR(255)
 );
 
-INSERT INTO users (name, email, password, gender, image_url) VALUES
-('nusteekai','nus16@gmail.com','1234','female','https://i.pravatar.cc/150?img=1'),
-('natbin','nat19@gmail.com','1234','male','https://i.pravatar.cc/150?img=2'),
-('kate','kate@gmail.com','1234','female','https://i.pravatar.cc/150?img=3'),
-('yammii','yam@gmail.com','1234','female','https://i.pravatar.cc/150?img=4'),
-('meile','mei5@gmail.com','1234','female','https://i.pravatar.cc/150?img=5'),
-('teameiei','team@gmail.com','1234','male','https://i.pravatar.cc/150?img=6'),
-('mk','mink@gmail.com','1234','female','https://i.pravatar.cc/150?img=7'),
-('aung','aaa@gmail.com','1234','female','https://i.pravatar.cc/150?img=8'),
-('User9','user9@gmail.com','1234','male','https://i.pravatar.cc/150?img=9'),
-('User10','user10@gmail.com','1234','female','https://i.pravatar.cc/150?img=10'),
-('User11','user11@gmail.com','1234','male','https://i.pravatar.cc/150?img=11'),
-('User12','user12@gmail.com','1234','female','https://i.pravatar.cc/150?img=12'),
-('User13','user13@gmail.com','1234','male','https://i.pravatar.cc/150?img=13'),
-('User14','user14@gmail.com','1234','female','https://i.pravatar.cc/150?img=14'),
-('User15','user15@gmail.com','1234','male','https://i.pravatar.cc/150?img=15'),
-('User16','user16@gmail.com','1234','female','https://i.pravatar.cc/150?img=16'),
-('User17','user17@gmail.com','1234','male','https://i.pravatar.cc/150?img=17'),
-('User18','user18@gmail.com','1234','male','https://i.pravatar.cc/150?img=18'),
-('User19','user19@gmail.com','1234','male','https://i.pravatar.cc/150?img=19'),
-('User20','user20@gmail.com','1234','male','https://i.pravatar.cc/150?img=20');
+-- ================= INSERT ADMINS =================
+INSERT INTO admins (name, email, password, gender, phone, image_url) VALUES
+('nusteekai','nus16@gmail.com','1234','female','0811111111','https://i.pravatar.cc/150?img=1'),
+('natbin','nat19@gmail.com','1234','male','0822222222','https://i.pravatar.cc/150?img=2'),
+('kate','kate@gmail.com','1234','female','0833333333','https://i.pravatar.cc/150?img=3'),
+('yammii','yam@gmail.com','1234','female','0844444444','https://i.pravatar.cc/150?img=4'),
+('meile','mei5@gmail.com','1234','female','0855555555','https://i.pravatar.cc/150?img=5');
+
+-- ================= INSERT USERS =================
+INSERT INTO users (name, email, password, gender, phone) VALUES
+('Somchai','somchai@gmail.com','1234','male','0861111111'),
+('Suda','suda@gmail.com','1234','female','0862222222'),
+('Anan','anan@gmail.com','1234','male','0863333333'),
+('Kanya','kanya@gmail.com','1234','female','0864444444'),
+('Prasert','prasert@gmail.com','1234','male','0865555555'),
+('Malee','malee@gmail.com','1234','female','0866666666'),
+('Narin','narin@gmail.com','1234','male','0867777777'),
+('Orn','orn@gmail.com','1234','female','0868888888'),
+('Wichai','wichai@gmail.com','1234','male','0869999999'),
+('Pim','pim@gmail.com','1234','female','0870000000');
