@@ -3,9 +3,12 @@
 import { useRouter } from "next/navigation";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
 /* ================= HEADER ================= */
 function Header() {
   const router = useRouter();
+
+  
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -133,8 +136,31 @@ export default function TravelPage() {
       location: "ถ.กาญจนวณิช อำเภอหาดใหญ่ จังหวัดสงขลา",
       mapUrl:"https://maps.app.goo.gl/BkpSpBKZ6ECBuKReA",
       openingHours: "	10:00 - 21:00น.",
-    }
+    },
+
+     {
+      id: 7,
+      titleTH: "มัสยิดกลางประจำจังหวัดสงขลา",
+      titleEN: "Songkhla Central Mosque ",
+      img: "/mussayid.jpg",
+      description: "ศาสนสถาน ศูนย์รวมจิตใจชาวมุสลิม",
+      location: "ต.คลองแห อำเภอหาดใหญ่ จังหวัดสงขลา",
+      mapUrl:"https://maps.app.goo.gl/J5KYHJHcYaPJttz2A",
+      openingHours: "		8:30 - 15:30น.",
+    },
+
+    {
+      id: 8,
+      titleTH: "วัดฉื่อฉาง",
+      titleEN: " 慈善寺",
+      img: "/ฉือฉาง.jpg",
+      description: "ศูนย์กลางการจัดงานเทศกาลสำคัญของชาวจีน",
+      location: "ถนนศุภสารรังสรรค์ อำเภอหาดใหญ่ จังหวัดสงขลา",
+      mapUrl:"https://maps.app.goo.gl/9mzBB3b3Wz8W8U4N7",
+      openingHours: "7:00 - 19:00 น.",
+    },
   ];
+  
 
   return (
     <>
@@ -143,13 +169,21 @@ export default function TravelPage() {
       <div className="container py-5">
         {/* ปุ่มย้อนกลับ */}
         <button
-          className="btn btn-outline-secondary mb-5"
+          className="btn btn-light border-0 shadow-sm px-4 py-2 mb-4 d-inline-flex align-items-center fw-medium"
+          style={{ borderRadius: '10px', transition: '0.3s' }}
           onClick={() => router.back()}
-        >
-          ← ย้อนกลับ
-        </button>
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
+>
+         <i className="bi bi-arrow-left me-2"></i> {/* ถ้าใช้ Bootstrap Icons */}
+          ย้อนกลับ
+       </button>
 
-        <h2 className="fw-bold mb-4 text-center">สถานที่แนะนำในหาดใหญ่ - สงขลา</h2>
+
+        <h2 
+             className="fw-bold text-center" 
+             style={{ marginTop: '0px', marginBottom: '80px' }}>
+              สถานที่แนะนำในหาดใหญ่ - สงขลา
+        </h2>
 
         {/* เริ่มการวนลูปแสดงข้อมูล */}
         {travelDataList.map((place) => (
@@ -194,7 +228,7 @@ export default function TravelPage() {
 /* ================= STYLE ================= */
 const navLinkStyle = {
   textDecoration: "none",
-  color: "#555",
+  color: "#ffffff",
   paddingBottom: "4px",
   borderBottom: "2px solid transparent",
   cursor: "pointer",
@@ -210,3 +244,6 @@ const logoutBtnStyle = {
   cursor: "pointer",
   marginLeft: "24px",
 };
+
+
+ 
