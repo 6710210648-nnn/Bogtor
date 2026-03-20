@@ -56,10 +56,10 @@ export default function Header() {
         <a href="/travel" style={navLinkStyle}>
           สถานที่ท่องเที่ยว
         </a>
-        <a href="/food" style={navLinkStyle}>
+        <a href="/food" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>
           ร้านอาหาร
         </a>
-        <a href="#" style={navLinkStyle}>
+        <a href="/comment" style={navLinkStyle}>
           บทความ
         </a>
         <a href="/account" style={navLinkStyle}>

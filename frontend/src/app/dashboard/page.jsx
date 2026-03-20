@@ -120,7 +120,7 @@ export default function Dashboard() {
             color: "#555",
           }}
         >
-          <a href="#" style={navLinkStyle}>
+          <a href="http://localhost:3000/dashboard" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>
             หน้าแรก
           </a>
           <a href="http://localhost:3000/travel" style={navLinkStyle}>
