@@ -56,10 +56,10 @@ function Header() {
         }}
       >
         <a href="/dashboard" style={navLinkStyle}>หน้าแรก</a>
-        <a href="/travel" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>สถานที่ท่องเที่ยว</a>
+        <a href="/travel" style={navLinkStyle}>สถานที่ท่องเที่ยว</a>
         <a href="/food" style={navLinkStyle}>ร้านอาหาร</a>
-        <a href="/comment" style={navLinkStyle}>บทความ</a>
-        <a href="/account" style={navLinkStyle}>ข้อมูลผู้ใช้</a>
+        <a href="#" style={navLinkStyle}>บทความ</a>
+        <a href="/account" style={navLinkStyle}>ข้อมูลส่วนตัว</a>
         <button onClick={handleLogout} style={logoutBtnStyle}>
           Logout
         </button>
@@ -285,7 +285,7 @@ export default function TravelPage() {
               <h3>{isEdit ? "แก้ไขสถานที่" : "เพิ่มสถานที่"}</h3>
 
               <div style={{ textAlign: "center" }}>
-                {form.image_url ? <img src={form.image_url} style={previewImg}/> : <div style={previewPlaceholder}>No Image</div>}
+                {form.image ? <img src={form.image} style={previewImg}/> : <div style={previewPlaceholder}>No Image</div>}
                 <input type="file" onChange={handleUpload}/>
                 {uploading && <p> Uploading...</p>}
               </div>
@@ -369,4 +369,3 @@ const logoutBtnStyle = {
   cursor: "pointer",
   marginLeft: "24px",
 };
-
