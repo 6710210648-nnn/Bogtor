@@ -19,24 +19,13 @@ export default function Login() {
       return;
     }
 
-    // 🔥 (จำลอง login ผ่าน)
     localStorage.setItem("user", JSON.stringify({ email, gender }));
-
-    // 👉 ไป dashboard
     router.push("/dashboard");
   };
 
   return (
-    <div className="text-center d-flex align-items-center justify-content-center vh-100">
-      <main
-        style={{
-          width: "300px",
-          background: "white",
-          padding: "20px",
-          borderRadius: "12px",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-        }}
-      >
+    <div style={bgStyle}>
+      <main style={card}>
         <form onSubmit={handleLogin}>
           <img
             className="mb-4"
@@ -107,3 +96,27 @@ export default function Login() {
     </div>
   );
 }
+
+/* ================= STYLE ================= */
+
+/* 🔥 พื้นหลังเป็นรูป */
+const bgStyle = {
+  minHeight: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundImage: "url('/sum.jpg')", // 👉 เปลี่ยนชื่อรูปได้
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+};
+
+/* 🔥 กล่องใหญ่ขึ้น */
+const card = {
+  width: "450px", // 👈 เดิม 300 → เพิ่ม
+  background: "rgba(255,255,255,0.95)", // โปร่งนิดๆ
+  padding: "40px", // 👈 เพิ่ม padding
+  borderRadius: "15px",
+  boxShadow: "0 6px 25px rgba(0,0,0,0.15)",
+  textAlign: "center",
+};

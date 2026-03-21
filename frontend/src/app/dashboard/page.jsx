@@ -120,20 +120,20 @@ export default function Dashboard() {
             color: "#555",
           }}
         >
-          <a href="#" style={navLinkStyle}>
+          <a href="http://localhost:3000/dashboard" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>
             หน้าแรก
           </a>
-          <a href="http://localhost:3001/travel" style={navLinkStyle}>
+          <a href="http://localhost:3000/travel" style={navLinkStyle}>
             สถานที่ท่องเที่ยว
           </a>
-          <a href="http://localhost:3001/food" style={navLinkStyle}>
+          <a href="http://localhost:3000/food" style={navLinkStyle}>
             ร้านอาหาร
           </a>
-          <a href="http://localhost:3001/comment" style={navLinkStyle}>
+          <a href="http://localhost:3000/comment" style={navLinkStyle}>
             บทความ
           </a>
-          <a href="http://localhost:3001/account" style={navLinkStyle}>
-            ข้อมูลส่วนตัว
+          <a href="http://localhost:3000/account" style={navLinkStyle}>
+            ข้อมูลผู้ใช้
           </a>
           <button onClick={handleLogout} style={logoutBtnStyle}>
             Logout
