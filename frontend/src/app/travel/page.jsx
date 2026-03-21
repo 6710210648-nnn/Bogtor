@@ -2,10 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
-
-
-
+// เพิ่ม useEffect เข้าไปในปีกกาด้านล่างนี้
+import React, { useState, useEffect } from 'react';
 
 /* ================= HEADER ================= */
 function Header() {
@@ -73,109 +71,245 @@ function Header() {
 
 /* ================= PAGE ================= */
 export default function TravelPage() {
-  const router = useRouter();
+  const [travelData, setTravelData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
 
-  const travelDataList = [
-    { id: 1, titleTH: "ตลาดกิมหยง", titleEN: "Kim Yong Market", img: "/gimyong.jpg", description: "ตลาดชื่อดังศูนย์รวมของฝากจากต่างประเทศ ผลไม้สด ผลไม้อบแห้ง และถั่วนานาชนิดที่เป็นเอกลักษณ์ของเมืองหาดใหญ่", location: "📍ถนนศุภสารรังสรรค์ ตำบลหาดใหญ่ อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/Fv1923bzyFJ2kZcS6", openingHours: "06:00 - 18:00 น." },
-    { id: 2, titleTH: "สวนสาธารณะเทศบาลนครหาดใหญ่", titleEN: "Hat Yai Municipal Park", img: "/HatyaiPark.jpg", description: "แลนด์มาร์คสำคัญของหาดใหญ่ ที่มีทั้งกระเช้าลอยฟ้า พระพุทธมงคลมหาราช และจุดชมวิวเมืองหาดใหญ่แบบ 360 องศา", location: "📍ถนนกาญจนวนิช ตำบลคอหงส์ อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/dwrWwRN7XzhyziLq6", openingHours: "05:00 - 20:00 น." },
-    { id: 3, titleTH: "ตลาดน้ำคลองแห", titleEN: "Khlong Hae Floating Market", img: "/คลองเเห.jpg", description: "ตลาดน้ำแห่งแรกของภาคใต้ สัมผัสวิถีชีวิตชาวบ้าน ชิมอาหารท้องถิ่นที่ขายบนเรือพาย และใช้ภาชนะจากธรรมชาติ", location: "📍ตำบลคลองแห อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/grYc3dN9ZqvfYWQe9", openingHours: "ศุกร์ - อาทิตย์ 13:00 - 21:00 น." },
-    { id: 4, titleTH: "วัดหาดใหญ่ใน", titleEN: "Mahattamangkalaram", img: "/วัดหาดใหญ่ใน.jpg", description: "ที่ประดิษฐานพระพุทธไสยาสน์ขนาดใหญ่ที่สุดในภาคใต้", location: "📍ถ.เพชรเกษม อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/2gsRKkFjbnNGGWQA8", openingHours: "7:00 - 18:00 น." },
-    { id: 5, titleTH: "น้ำตกโตนงาช้าง", titleEN: "Ton Nga Chang Waterfall", img: "/โตนงาช้าง.jpg", description: "น้ำตก 7 ชั้นที่มีชื่อเสียง โดยเฉพาะชั้นที่ 3 (งาช้าง)", location: "📍เขตรักษาพันธุ์สัตว์ป่า", mapUrl: "https://maps.app.goo.gl/zVVA77TCLeLt7f1U6", openingHours: "9:00 - 16:00 น." },
-    { id: 6, titleTH: "เซ็นทรัล หาดใหญ่", titleEN: "Central Hatyai", img: "/เซนทรัล.jpg", description: "ห้างสรรพสินค้าที่ใหญ่ที่สุดในหาดใหญ่ ครบครันทุกบริการ", location: "📍ถ.กาญจนวณิช อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/BkpSpBKZ6ECBuKReA", openingHours: "10:00 - 21:00 น." },
-    { id: 7, titleTH: "มัสยิดกลางประจำจังหวัดสงขลา", titleEN: "Songkhla Central Mosque", img: "/mussayid.jpg", description: "ศาสนสถาน ศูนย์รวมจิตใจชาวมุสลิม", location: "📍ต.คลองแห อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/J5KYHJHcYaPJttz2A", openingHours: "8:30 - 15:30 น." },
-    { id: 8, titleTH: "วัดฉื่อฉาง", titleEN: "慈善寺", img: "/ฉือฉาง.jpg", description: "ศูนย์กลางการจัดงานเทศกาลสำคัญของชาวจีน", location: "📍ถนนศุภสารรังสรรค์ อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/9mzBB3b3Wz8W8U4N7", openingHours: "7:00 - 19:00 น." },
-    { id: 9, titleTH: "ตลาดกรีนเวย์ไนท์มาร์เก็ต", titleEN: "greenwaynightmarket", img: "/กรีนเว.jpg", description: "ตลาดนัดกลางคืน เสื้อผ้า ของกินมากมาย", location: "📍ถนน กาญจนวณิชย์ อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/U8goNhZX9CTYYM5e6", openingHours: "17:00 - 22:00น." },
-    { id: 10, titleTH: "พระมหาธาตุเจดีย์ไตรภพไตรมงคล", titleEN: "Maha That Chedi Triphop Tri Mongkhon", img: "/jeady.jpg", description: "พบกับเรื่องราวเกี่ยวกับมายากลมากมายที่จัดแสดงทั้งโซนภาพวาดสามมิติสุดอลังการ", location: "📍ถนนปุณณกัณฑ์ ตำบลคอหงส์ อำเภอหาดใหญ่ จังหวัดสงขลา", mapUrl: "https://maps.app.goo.gl/gPKDotRsn57ERipk6", openingHours: "24 ชั่วโมง" },
-   
-  ];
+  // ✨ Modal state
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [form, setForm] = useState({
+  id: null,
+  title_th: "",
+  title_en: "",
+  description: "", // แก้สะกดให้ตรงกับ Backend
+  category: "",    // ใช้ตัวเล็กให้หมด
+  location_address: "",
+  map_url: "",
+  opening_hours: "",
+  image_url: null
+});
+
+  const [uploading, setUploading] = useState(false);
+
+  // Fetch
+  const fetchTravelData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:3001/travel");
+      const data = await res.json();
+      setTravelData(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { fetchTravelData(); }, []);
+
+  const categories = ["ทั้งหมด", ...new Set(travelData.map(item => item.category ))];
+
+  const filteredPlaces = travelData.filter((place) => {
+    const matchesSearch = (place.title_th?.toLowerCase().includes(searchTerm.toLowerCase())) || 
+                          (place.title_en?.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCategory = selectedCategory === "ทั้งหมด" || (place.category ) === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  // ✨ ปุ่มเพิ่มสถานที่
+  const handleAdd = () => {
+    setIsEdit(false);
+    setForm({
+      id: null,
+      title_th: "",
+      title_en: "",
+      description: "",
+      category: "",
+      location_address: "",
+      map_url: "",
+      opening_hours: "",
+      image: null,
+    });
+    setIsOpen(true);
+  };
+
+  // ✨ ปุ่มแก้ไขสถานที่
+  const handleEdit = (place) => {
+    setIsEdit(true);
+    setForm({ ...place, image_url: place.image || "" });
+    setIsOpen(true);
+  };
+
+  // ✨ Upload รูป (ตัวอย่าง)
+  const handleUpload = (e) => {
+    const file = e.target.files[0];
+    setForm({ ...form, image: file, image_url: URL.createObjectURL(file) });
+  };
+
+  // ✨ Save (POST หรือ PUT)
+  const handleSave = async () => {
+  try {
+    const url = isEdit ? `http://localhost:3001/travel/${form.id}` : "http://localhost:3001/travel";
+    const method = isEdit ? "PUT" : "POST";
+
+    const payload = {
+      title_th: form.title_th || "No Title",
+      title_en: form.title_en || "No Title",
+      description: form.description || "",
+      category: form.category || "ทั่วไป",
+      location_address: form.location_address || "",
+      map_url: form.map_url || "",
+      opening_hours: form.opening_hours || "",
+      // ลองคอมเมนต์บรรทัดนี้ออกก่อนเพื่อเช็กว่าพังเพราะรูปไหม
+      // image_url: form.image_url 
+    };
+
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      // ดึง Error Message จากฝั่ง Server ออกมาดู
+      const errorDetail = await res.json(); 
+      console.log("Server Error Detail:", errorDetail);
+      throw new Error(`Server error: ${res.status}`);
+    }
+
+    setIsOpen(false);
+    fetchTravelData();
+  } catch (err) {
+    console.error("Save Error:", err);
+    alert("บันทึกไม่สำเร็จ! ลองเช็กที่ Console ของตัวโปรแกรม Backend (Terminal)");
+  }
+};
+
+  // ✨ ลบ
+  const handleDelete = async (id) => {
+    if (!confirm("ต้องการลบจริงๆ หรออ้วน?")) return;
+    await fetch(`http://localhost:3001/travel/${id}`, { method: 'DELETE' });
+    fetchTravelData();
+  };
+
+  // Styles ของ Modal
+  const modalOverlay = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display:'flex', justifyContent:'center', alignItems:'center', zIndex: 999 };
+  const modalStyle = { background:'white', padding:'20px', borderRadius:'10px', width:'400px', maxHeight:'90vh', overflowY:'auto' };
+  const inputStyle = { width:'100%', padding:'8px', margin:'5px 0', borderRadius:'5px', border:'1px solid #ccc' };
+  const previewImg = { width:'120px', height:'120px', objectFit:'cover', marginBottom:'10px', borderRadius:'8px' };
+  const previewPlaceholder = { width:'120px', height:'120px', background:'#eee', display:'flex', justifyContent:'center', alignItems:'center', marginBottom:'10px', borderRadius:'8px' };
+  const saveBtn = { flex:1, padding:'8px', background:'green', color:'white', border:'none', borderRadius:'5px' };
+  const cancelBtn = { flex:1, padding:'8px', background:'red', color:'white', border:'none', borderRadius:'5px' };
 
   return (
     <div className="bg-light min-vh-100">
       <Header />
 
       <div className="container py-5" style={{ maxWidth: '1000px' }}>
-        {/* Header Section */}
+        <div className="d-flex justify-content-between align-items-end mb-4 border-bottom pb-4">
+          <h2 className="fw-bold mb-1">สำรวจหาดใหญ่กับ BOGTOR 🚌</h2>
+          <button className="btn btn-outline-dark btn-sm rounded-pill px-3" onClick={handleAdd}>เพิ่มสถานที่</button>
+        </div>
 
         <div className="mb-4">
-           <input
-             type="text"
-             className="form-control rounded-pill px-4 py-2 shadow-sm"
-             placeholder="🔎ค้นหาได้ที่นี้นะอ้วน"
-             value={searchTerm}
-             onChange={(e) => setSearchTerm(e.target.value)}/>
-        </div>
-        <div className="d-flex justify-content-between align-items-end mb-5 border-bottom pb-4">
-          <div>
-            <h2 className="fw-bold mb-1">สำรวจหาดใหญ่กับพวกเรา BOGTOR </h2>
-            <p className="text-muted mb-0">รวมสถานที่ท่องเที่ยวในหาดใหญ่ เมื่อมาเยือนที่คุณห้ามพลาด✈️</p>
-          </div>
-          <button
-            className="btn btn-outline-dark btn-sm rounded-pill px-3"
-            onClick={() => window.history.back()}
-          >
-            <i className="bi bi-arrow-left me-1"></i> ย้อนกลับ
-          </button>
+          <input
+            type="text"
+            className="form-control rounded-pill px-4 py-2 shadow-sm"
+            placeholder="🔎ค้นหา"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
 
-        {/* List Loop */}
-        {travelDataList.filter((place) =>
-          place.titleTH.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          place.titleEN.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-          .map((place) => (
-          <div 
-            className="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 hover-shadow transition-all" 
-            key={place.id}
-            style={{ transition: '0.3s' }}
-          >
+        <div className="d-flex flex-wrap gap-2 mb-4">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              className={`btn btn-sm rounded-pill px-3 transition-all ${selectedCategory === cat ? 'btn-dark':'btn-white shadow-sm'}`}
+              onClick={() => setSelectedCategory(cat)}
+            >{cat}</button>
+          ))}
+        </div>
+
+        {!loading && filteredPlaces.length === 0 && (
+          <div className="text-center py-5"><p>ไม่พบสถานที่ท่องเที่ยว 🔍</p></div>
+        )}
+
+        {!loading && filteredPlaces.map(place => (
+          <div className="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 hover-shadow transition-all" key={place.id}>
             <div className="row g-0">
-              {/* รูปภาพขนาดเล็กลง (Fixed Width บน Desktop) */}
               <div className="col-md-4">
                 <img
-                  src={place.img}
-                  alt={place.titleTH}
+                  src={place.image && place.image.startsWith('http') ? place.image : (place.image ? `http://localhost:3001/uploads_travel/${place.image}`:'/placeholder.jpg')}
+                  alt={place.title_th}
                   className="img-fluid h-100 w-100"
-                  style={{ objectFit: "cover", minHeight: '250px' }}
+                  style={{ objectFit:"cover", minHeight:'250px' }}
+                  onError={(e)=>{ e.target.src='https://via.placeholder.com/400x250?text=No+Image'; e.target.onerror=null; }}
                 />
               </div>
-
-              {/* รายละเอียดฝั่งขวา */}
               <div className="col-md-8 d-flex flex-column justify-content-center p-4">
                 <div className="mb-2">
-                  <h4 className="fw-bold mb-0 text-dark">{place.titleTH}</h4>
-                  <span className="text-primary small fw-medium text-uppercase">{place.titleEN}</span>
+                  <span className="badge bg-secondary-subtle text-secondary mb-2 fw-normal">{place.category||"หาดใหญ่"}</span>
+                  <h4 className="fw-bold mb-0 text-dark">{place.title_th}</h4>
+                  <span className="text-primary small fw-medium text-uppercase">{place.title_en}</span>
                 </div>
-                
-                <p className="text-secondary small mb-3" style={{ display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {place.description}
-                </p>
-                
+                <p className="text-secondary small mb-3" style={{ display:'-webkit-box', WebkitLineClamp:'2', WebkitBoxOrient:'vertical', overflow:'hidden' }}>{place.description}</p>
+                <div className="bg-light p-3 rounded-3 mb-3" style={{ fontSize:'0.85rem' }}>
+                  <div className="d-flex mb-2"><i className="bi bi-geo-alt text-danger me-2"></i><span className="text-dark truncate">{place.location_address}</span></div>
+                  <div className="d-flex"><i className="bi bi-clock text-muted me-2"></i><span className="text-dark">{place.opening_hours}</span></div>
+                </div>
 
-                <div className="bg-light p-3 rounded-3 mb-3" style={{ fontSize: '0.85rem' }}>
-                  <div className="d-flex mb-2">
-                    <i className="bi bi-geo-alt text-danger me-2"></i>
-                    <span className="text-dark truncate">{place.location}</span>
-                  </div>
-                  <div className="d-flex">
-                    <i className="bi bi-clock text-muted me-2"></i>
-                    <span className="text-dark">{place.openingHours}</span>
-                  </div>
-                </div>
-                
+                <div className="mt-auto d-flex gap-2">
+                    <button className="btn btn-maps rounded-pill px-3 btn-sm shadow-sm" onClick={()=>window.open(place.map_url,'_blank')}>
+                    <i className="bi bi-pin-map-fill me-2"></i> Maps
+                 </button>
 
-                <div className="mt-auto">
-                  <button 
-                    className="btn btn-dark rounded-pill px-4 btn-sm shadow-sm"
-                    onClick={() => window.open(place.mapUrl, '_blank')}
-                  >
-                    <i className="bi bi-pin-map-fill me-2"></i> ดูแผนที่
-                  </button>
-                </div>
+                <button className="btn btn-edit rounded-pill px-3 btn-sm shadow-sm" onClick={()=>handleEdit(place)}>
+                  แก้ไข
+                </button>
+            
+                <button className="btn btn-delete rounded-pill px-3 btn-sm shadow-sm" onClick={()=>handleDelete(place.id)}>
+                   ลบ
+                </button>
+              </div>
               </div>
             </div>
           </div>
         ))}
+
+        {/* ✨ Modal */}
+        {isOpen && (
+          <div style={modalOverlay}>
+            <div style={modalStyle}>
+              <h3>{isEdit ? "แก้ไขสถานที่" : "เพิ่มสถานที่"}</h3>
+
+              <div style={{ textAlign: "center" }}>
+                {form.image_url ? <img src={form.image_url} style={previewImg}/> : <div style={previewPlaceholder}>No Image</div>}
+                <input type="file" onChange={handleUpload}/>
+                {uploading && <p> Uploading...</p>}
+              </div>
+
+              <input placeholder="ชื่อไทย" style={inputStyle} value={form.title_th || ''}onChange={(e)=>setForm({...form,title_th:e.target.value})}/>
+              <input placeholder="ชื่ออังกฤษ" style={inputStyle} value={form.title_en} onChange={(e)=>setForm({...form,title_en:e.target.value})}/>
+              <input placeholder="Category" style={inputStyle} value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}/>
+              <input placeholder="ที่อยู่" style={inputStyle} value={form.location_address} onChange={(e)=>setForm({...form,location_address:e.target.value})}/>
+              <input placeholder="เวลาเปิด" style={inputStyle} value={form.opening_hours} onChange={(e)=>setForm({...form,opening_hours:e.target.value})}/>
+              <input placeholder="URL แผนที่" style={inputStyle} value={form.map_url} onChange={(e)=>setForm({...form,map_url:e.target.value})}/>
+             <input 
+                     placeholder="รายละเอียด" 
+                     style={inputStyle} 
+                     value={form.description} 
+                     onChange={(e) => setForm({ ...form, description: e.target.value })} 
+             />
+              <div style={{ display:"flex", gap:"10px", marginTop:"10px" }}>
+                <button style={saveBtn} onClick={handleSave}>Save</button>
+                <button style={cancelBtn} onClick={()=>setIsOpen(false)}>Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
 
       <style>{`
@@ -189,13 +323,33 @@ export default function TravelPage() {
           overflow: hidden;
           text-overflow: ellipsis;
         }
+        .btn-white {
+          background: white;
+          color: #555;
+          border: 1px solid #eee;
+        }
+
+        .btn-maps {
+          background: #8ef2ff; 
+          color: #000000;       
+       
+        }
+
+       .btn-edit {
+         background: #91f9ae;
+         color: #000000;       
+          
+       }
+
+      .btn-delete {
+        background: #d24141; 
+        color: #000000;       
+      }
+
       `}</style>
     </div>
   );
 }
-  
-  
-
 /* ================= STYLE ================= */
 const navLinkStyle = {
   textDecoration: "none",
@@ -215,6 +369,3 @@ const logoutBtnStyle = {
   cursor: "pointer",
   marginLeft: "24px",
 };
-
-
- 
