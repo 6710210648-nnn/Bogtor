@@ -190,38 +190,50 @@ app.post("/upload", upload.single("image"), (req, res) => {
 // ======================== Travel CRUD (อัปเดตล่าสุด) ========================
 
 // 1. ดึงข้อมูลทั้งหมด
-app.get("/travel", (req, res) => {
-  db.query("SELECT * FROM travel", (err, result) => {
-    if (err) return res.status(500).json(err);
-    res.json(result);
+app.get("/travel/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("SELECT * FROM travel WHERE id = ?", [id], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (result.length === 0) return res.status(404).json({ message: "Not Found" });
+    res.json(result[0]);
   });
 });
 
 // 2. เพิ่มสถานที่ใหม่ (POST)
-app.post("/travel", (req, res) => {
-  const { title_th, title_en, description, category, location_address, map_url, opening_hours, image_url } = req.body;
+ app.post("/travel", (req, res) => {
+  // รับค่า image ตรงๆ (เช็คทั้ง image และ image_url เพื่อความชัวร์)
+  const { title_th, title_en, description, category, location_address, map_url, opening_hours, image, image_url } = req.body;
   
-  // สังเกต: ใน DB ของแยมชื่อคอลัมน์คือ 'image' (อิงตามรูป phpMyAdmin)
+  // ป้องกันค่า null: ถ้าไม่มีค่าส่งมา ให้กลายเป็น String ว่าง ""
+  const finalImage = image || image_url || ""; 
+
   const sql = `
     INSERT INTO travel (title_th, title_en, description, category, location_address, map_url, opening_hours, image)
     VALUES (?,?,?,?,?,?,?,?)
   `;
   
-  db.query(sql, [title_th, title_en, description, category, location_address, map_url, opening_hours, image_url], (err, result) => {
+  db.query(sql, [title_th, title_en, description, category, location_address, map_url, opening_hours, finalImage], (err, result) => {
     if (err) {
-      console.error("❌ Insert Error:", err);
+      console.error("❌ Insert Error:", err.message);
       return res.status(500).json({ error: err.message });
     }
-    res.json({ success: true, message: "Data created successfully", id: result.insertId });
+    res.json({ success: true, message: "Created successfully", id: result.insertId });
   });
 });
 
-// 3. แก้ไขข้อมูล (PUT) - ตัวที่แยมติดปัญหา 404
+
+
 app.put("/travel/:id", (req, res) => {
   const id = req.params.id;
-  const { title_th, title_en, description, category, location_address, map_url, opening_hours, image_url } = req.body;
+  
+  // 1. ดึงมาให้ครบทั้ง image และ image_url
+  const { 
+    title_th, title_en, description, category, 
+    location_address, map_url, opening_hours, image, image_url 
+  } = req.body;
 
-  console.log("Updating ID:", id);
+  // 2. ตรวจสอบค่า และถ้าเป็นแค่ชื่อไฟล์ ให้เติม path (ถ้าต้องการ)
+  let finalImage = image || image_url || ""; 
 
   const sql = `
     UPDATE travel 
@@ -230,32 +242,21 @@ app.put("/travel/:id", (req, res) => {
     WHERE id=?
   `;
 
-  const values = [title_th, title_en, description, category, location_address, map_url, opening_hours, image_url, id];
+  const values = [
+    title_th, title_en, description, category, 
+    location_address, map_url, opening_hours, 
+    finalImage, 
+    id
+  ];
 
   db.query(sql, values, (err, result) => {
     if (err) {
-      console.error("❌ SQL Error:", err);
+      console.error("❌ SQL Error:", err.message);
       return res.status(500).json({ error: err.message });
     }
-    
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Data not found for this ID" });
-    }
-
-    console.log("Updated successfully:", id);
-    res.json({ success: true });
+    res.json({ success: true, message: "Updated successfully" });
   });
 });
-
-// 4. ลบข้อมูล (DELETE)
-app.delete("/travel/:id", (req, res) => {
-  const id = req.params.id;
-  db.query("DELETE FROM travel WHERE id=?", [id], (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ success: true, message: "Deleted successfully" });
-  });
-});
-
 // ================= START =================
 app.listen(PORT, () => {
   console.log(`🚀 Server running http://localhost:${PORT}`);
