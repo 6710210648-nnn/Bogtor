@@ -212,7 +212,7 @@ app.post("/travel", (req, res) => {
       console.error("❌ Insert Error:", err);
       return res.status(500).json({ error: err.message });
     }
-    res.json({ success: true, message: "สร้างข้อมูลสำเร็จ", id: result.insertId });
+    res.json({ success: true, message: "Data created successfully", id: result.insertId });
   });
 });
 
@@ -221,7 +221,7 @@ app.put("/travel/:id", (req, res) => {
   const id = req.params.id;
   const { title_th, title_en, description, category, location_address, map_url, opening_hours, image_url } = req.body;
 
-  console.log("🛠️ กำลังอัปเดต ID:", id);
+  console.log("Updating ID:", id);
 
   const sql = `
     UPDATE travel 
@@ -239,10 +239,10 @@ app.put("/travel/:id", (req, res) => {
     }
     
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "ไม่พบข้อมูล ID นี้" });
+      return res.status(404).json({ message: "Data not found for this ID" });
     }
 
-    console.log("✅ บันทึกสำเร็จแล้วสำหรับ ID:", id);
+    console.log("Updated successfully:", id);
     res.json({ success: true });
   });
 });
@@ -252,7 +252,7 @@ app.delete("/travel/:id", (req, res) => {
   const id = req.params.id;
   db.query("DELETE FROM travel WHERE id=?", [id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json({ success: true, message: "ลบข้อมูลสำเร็จ" });
+    res.json({ success: true, message: "Deleted successfully" });
   });
 });
 
