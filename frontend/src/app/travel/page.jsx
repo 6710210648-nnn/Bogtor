@@ -58,7 +58,7 @@ function Header() {
         <a href="/dashboard" style={navLinkStyle}>หน้าแรก</a>
         <a href="/travel" style={navLinkStyle}>สถานที่ท่องเที่ยว</a>
         <a href="/food" style={navLinkStyle}>ร้านอาหาร</a>
-        <a href="#" style={navLinkStyle}>บทความ</a>
+        <a href="/comment" style={navLinkStyle}>บทความ</a>
         <a href="/account" style={navLinkStyle}>ข้อมูลส่วนตัว</a>
         <button onClick={handleLogout} style={logoutBtnStyle}>
           Logout
