@@ -55,10 +55,12 @@ function Header() {
         }}
       >
         <a href="/dashboard" style={navLinkStyle}>หน้าแรก</a>
-        <a href="/travel" style={navLinkStyle}>สถานที่ท่องเที่ยว</a>
+         <a href="/graph_travel" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>
+          ประเภทสถานที่
+        </a>
         <a href="/food" style={navLinkStyle}>ร้านอาหาร</a>
         <a href="/comment" style={navLinkStyle}>บทความ</a>
-        <a href="/account" style={navLinkStyle}>ข้อมูลส่วนตัว</a>
+        <a href="/account" style={navLinkStyle}>ข้อมูลผู้ใช้</a>
         <button onClick={handleLogout} style={logoutBtnStyle}>
           Logout
         </button>
@@ -70,25 +72,25 @@ function Header() {
 
 /* ================= PAGE ================= */
 export default function TravelPage() {
-  const [travelData, setTravelData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
+        const [travelData, setTravelData] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [searchTerm, setSearchTerm] = useState("");
+        const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
 
   // ✨ Modal state
-  const [isOpen, setIsOpen] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  const [form, setForm] = useState({
-  id: null,
-  title_th: "",
-  title_en: "",
-  description: "", // แก้สะกดให้ตรงกับ Backend
-  category: "",    // ใช้ตัวเล็กให้หมด
-  location_address: "",
-  map_url: "",
-  opening_hours: "",
-  image_url: "",
-});
+        const [isOpen, setIsOpen] = useState(false);
+        const [isEdit, setIsEdit] = useState(false);
+         const [form, setForm] = useState({
+         id: null,
+         title_th: "",
+         title_en: "",
+         description: "", // แก้สะกดให้ตรงกับ Backend
+         category: "",    // ใช้ตัวเล็กให้หมด
+         location_address: "",
+         map_url: "",
+         opening_hours: "",
+         image_url: "",
+    });
 
   const [uploading, setUploading] = useState(false);
 
@@ -110,7 +112,7 @@ export default function TravelPage() {
   const categories = ["ทั้งหมด", ...new Set(travelData.map(item => item.category ))];
 
   const filteredPlaces = travelData.filter((place) => {
-    const matchesSearch = (place.title_th?.toLowerCase().includes(searchTerm.toLowerCase())) || 
+  const matchesSearch = (place.title_th?.toLowerCase().includes(searchTerm.toLowerCase())) || 
                           (place.title_en?.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = selectedCategory === "ทั้งหมด" || (place.category ) === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -174,14 +176,14 @@ const handleSave = async () => {
     const method = isEdit ? "PUT" : "POST";
 
     const payload = {
-  title_th: form.title_th || "No Title",
-  title_en: form.title_en || "No Title",
-  description: form.description || "",
-  category: form.category || "ทั่วไป",
-  location_address: form.location_address || "",
-  map_url: form.map_url || "",
-  opening_hours: form.opening_hours || "",
-  image_url: form.image || "default.jpg"
+       title_th: form.title_th || "No Title",
+       title_en: form.title_en || "No Title",
+       description: form.description || "",
+       category: form.category || "ทั่วไป",
+       location_address: form.location_address || "",
+       map_url: form.map_url || "",
+       opening_hours: form.opening_hours || "",
+       image_url: form.image || "default.jpg"
 };
 
     const res = await fetch(url, {
@@ -256,46 +258,56 @@ const handleSave = async () => {
           <div className="text-center py-5"><p>ไม่พบสถานที่ท่องเที่ยว 🔍</p></div>
         )}
 
-        {!loading && filteredPlaces.map(place => (
-          <div className="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 hover-shadow transition-all" key={place.id}>
-            <div className="row g-0">
-              <div className="col-md-4">
-                <img
-                  src={place.image && place.image.startsWith('http') ? place.image : (place.image ? `http://localhost:3001/uploads/${place.image}`:'/placeholder.jpg')}
-                  alt={place.title_th}
-                  className="img-fluid h-100 w-100"
-                  style={{ objectFit:"cover", minHeight:'250px' }}
-                  onError={(e)=>{ e.target.src='https://via.placeholder.com/400x250?text=No+Image'; e.target.onerror=null; }}
-                />
-              </div>
-              <div className="col-md-8 d-flex flex-column justify-content-center p-4">
-                <div className="mb-2">
-                  <span className="badge bg-secondary-subtle text-secondary mb-2 fw-normal">{place.category||"หาดใหญ่"}</span>
-                  <h4 className="fw-bold mb-0 text-dark">{place.title_th}</h4>
-                  <span className="text-primary small fw-medium text-uppercase">{place.title_en}</span>
-                </div>
-                <p className="text-secondary small mb-3" style={{ display:'-webkit-box', WebkitLineClamp:'2', WebkitBoxOrient:'vertical', overflow:'hidden' }}>{place.description}</p>
-                <div className="bg-light p-3 rounded-3 mb-3" style={{ fontSize:'0.85rem' }}>
-                  <div className="d-flex mb-2"><i className="bi bi-geo-alt text-danger me-2"></i><span className="text-dark truncate">{place.location_address}</span></div>
-                  <div className="d-flex"><i className="bi bi-clock text-muted me-2"></i><span className="text-dark">{place.opening_hours}</span></div>
-                </div>
+          {!loading && filteredPlaces.map((place) => {
+  const imgSrc = place.image
+    ? place.image.startsWith("http") ? place.image : `http://localhost:3001/uploads/${place.image}`
+    : "/placeholder.jpg";
 
-                <div className="mt-auto d-flex gap-2">
-                    <button className="btn btn-maps rounded-pill px-3 btn-sm shadow-sm" onClick={()=>window.open(place.map_url,'_blank')}>
-                    <i className="bi bi-pin-map-fill me-2"></i> Maps
-                 </button>
+  return (
+    <div key={place.id} className="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 hover-shadow">
+      <div className="row g-0">
 
-                <button className="btn btn-edit rounded-pill px-3 btn-sm shadow-sm" onClick={()=>handleEdit(place)}>
-                  แก้ไข
-                </button>
-            
-                <button className="btn btn-delete rounded-pill px-3 btn-sm shadow-sm" onClick={()=>handleDelete(place.id)}>
-                   ลบ
-                </button>
-              </div>
-              </div></div>
+        {/* Image */}
+        <div className="col-md-4">
+          <img
+            src={imgSrc}
+            alt={place.title_th}
+            className="img-fluid h-100 w-100"
+            style={{ objectFit: "cover", minHeight: "250px" }}
+            onError={(e) => { e.target.src = "https://via.placeholder.com/400x250?text=No+Image"; e.target.onerror = null; }}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="col-md-8 d-flex flex-column justify-content-center p-4">
+          <span className="badge bg-secondary-subtle text-secondary mb-2 fw-normal">{place.category || "หาดใหญ่"}</span>
+          <h4 className="fw-bold mb-0 text-dark">{place.title_th}</h4>
+          <span className="text-primary small fw-medium text-uppercase mb-2">{place.title_en}</span>
+
+          <p className="text-secondary small mb-3" 
+             style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+            {place.description}
+          </p>
+
+          <div className="bg-light p-3 rounded-3 mb-3" style={{ fontSize: "0.85rem" }}>
+            <div className="d-flex mb-2"><i className="bi bi-geo-alt text-danger me-2" />
+            <span className="text-dark truncate">{place.location_address}</span></div>
+            <div className="d-flex">       <i className="bi bi-clock text-muted me-2"  />
+            <span className="text-dark">{place.opening_hours}</span></div>
           </div>
-        ))}
+
+          <div className="mt-auto d-flex gap-2">
+            <button className="btn btn-maps   rounded-pill px-3 btn-sm" onClick={() => window.open(place.map_url, "_blank")}>
+              <i className="bi bi-pin-map-fill me-1" /> Maps</button>
+            <button className="btn btn-edit   rounded-pill px-3 btn-sm" onClick={() => handleEdit(place)}>แก้ไข</button>
+            <button className="btn btn-delete rounded-pill px-3 btn-sm" onClick={() => handleDelete(place.id)}>ลบ</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+})}
 
         {/* ✨ Modal */}
         {isOpen && (
@@ -309,12 +321,18 @@ const handleSave = async () => {
                 {uploading && <p> Uploading...</p>}
               </div>
 
-              <input placeholder="ชื่อไทย" style={inputStyle} value={form.title_th || ''}onChange={(e)=>setForm({...form,title_th:e.target.value})}/>
-              <input placeholder="ชื่ออังกฤษ" style={inputStyle} value={form.title_en} onChange={(e)=>setForm({...form,title_en:e.target.value})}/>
-              <input placeholder="Category" style={inputStyle} value={form.category} onChange={(e)=>setForm({...form,category:e.target.value})}/>
-              <input placeholder="ที่อยู่" style={inputStyle} value={form.location_address} onChange={(e)=>setForm({...form,location_address:e.target.value})}/>
-              <input placeholder="เวลาเปิด" style={inputStyle} value={form.opening_hours} onChange={(e)=>setForm({...form,opening_hours:e.target.value})}/>
-              <input placeholder="URL แผนที่" style={inputStyle} value={form.map_url} onChange={(e)=>setForm({...form,map_url:e.target.value})}/>
+              <input placeholder="ชื่อไทย" style={inputStyle} value={form.title_th || ''}
+                     onChange={(e)=>setForm({...form,title_th:e.target.value})}/>
+              <input placeholder="ชื่ออังกฤษ" style={inputStyle} value={form.title_en} 
+                     onChange={(e)=>setForm({...form,title_en:e.target.value})}/>
+              <input placeholder="Category" style={inputStyle} value={form.category} 
+                    onChange={(e)=>setForm({...form,category:e.target.value})}/>
+              <input placeholder="ที่อยู่" style={inputStyle} value={form.location_address}
+                     onChange={(e)=>setForm({...form,location_address:e.target.value})}/>
+              <input placeholder="เวลาเปิด" style={inputStyle} value={form.opening_hours} 
+                     onChange={(e)=>setForm({...form,opening_hours:e.target.value})}/>
+              <input placeholder="URL แผนที่" style={inputStyle} value={form.map_url} 
+                     onChange={(e)=>setForm({...form,map_url:e.target.value})}/>
              <input 
                      placeholder="รายละเอียด" 
                      style={inputStyle} 

@@ -151,7 +151,6 @@ export default function AdminPage() {
   return (
     <>
       <Header />
-
       <div style={container}>
         <div style={tableBox}>
           <div style={topBar}>
@@ -319,9 +318,7 @@ export default function AdminPage() {
 }
 
 /* ================= STYLE ================= */
-
 const navLinkStyle = { textDecoration: "none", color: "#555" };
-
 const logoutBtnStyle = {
   padding: "6px 14px",
   border: "1px solid #ff6f61",
