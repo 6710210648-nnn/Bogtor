@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2026 at 07:30 PM
+-- Generation Time: Mar 28, 2026 at 11:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -93,6 +93,41 @@ INSERT INTO `comments` (`id`, `article_id`, `author`, `text`, `rating`, `created
 (1, 1, 'นุส', 'ไม่ร่อย', 4, '2026-03-28 22:40:06'),
 (2, 1, 'ผู้ใช้นิรนาม', 'nggh', 0, '2026-03-29 00:44:49'),
 (3, 1, 'jjj', 'jjj', 4, '2026-03-29 00:44:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `food`
+--
+
+CREATE TABLE `food` (
+  `id` int(100) NOT NULL,
+  `name_th` varchar(255) NOT NULL,
+  `name_en` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `opening_hours` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `map_url` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `food`
+--
+
+INSERT INTO `food` (`id`, `name_th`, `name_en`, `type`, `description`, `location`, `opening_hours`, `image`, `map_url`) VALUES
+(1, 'Copper wood', 'Copper wood', 'คาเฟ่', 'คาเฟ่ฮีลใจที่เริ่ดด บรรยากาศอบอุ่น แบบมินิมอล ตกแต่งสีเอิร์ทโทน ตัดกับต้นสนใหญ่กลางร้าน มีทั้งโซนห้องแอร์เย็นฉ่ำ และโซน outdoor สบายๆ', '42 ตำบลบ้านพรุ อำเภอหาดใหญ่ สงขลา ', '9:00 - 18:30', 'http://localhost:3001/uploads/1774737834031.jpg', ''),
+(2, 'Sirene - Cafe & Restaurant', 'Sirene - Cafe & Restaurant', 'คาเฟ่', 'คาเฟ่ที่โดยรวมตกแต่งในสไตล์มินิมอล ซิกเนเจอร์ของทางร้านจะเป็นขนมแนวฝรั่งเศษ', '33 ราษฎร์ยินดี ซอย 3 ตำบล หาดใหญ่ อำเภอหาดใหญ่ สงขลา ', '9:00 - 20:00', 'http://localhost:3001/uploads/1774737849127.jpg', ''),
+(3, 'on.cloud9.hdy', 'on.cloud9.hdy', 'คาเฟ่', 'คาเฟ่มินิมอลเทสดี มุมถ่ายรูปจึ้ง แสงสวยแบบตะโกน', '1 เพชรเกษม ซอย 10/13 ตำบล หาดใหญ่ อำเภอหาดใหญ่ สงขลา ', '7:00 - 19:00', 'http://localhost:3001/uploads/1774737884561.jpg', ''),
+(4, 'Keeyadee', 'Keeyadee', 'คาเฟ่', 'คาเฟ่ที่มี Art gallery  บรรยายร่มรื่น มีโซน Outdoor / ห้องแอร์ / กลางคืน มี โซนดนตรีสด และสามารถ ร่วมกิจกรรม วาดรูปบนผ้าใบ', '51/1 ซอย 7 ตำบล หาดใหญ่ อำเภอหาดใหญ่ สงขลา', '7:30-18:00', 'http://localhost:3001/uploads/1774737901905.jpg', ''),
+(5, 'Cheevit Cheeva', 'Cheevit Cheeva', 'ของหวาน', 'เป็นคาเฟ่ขนมหวานชื่อดังจากเชียงใหม่ที่มาเปิดสาขาในหาดใหญ่ ตกแต่งสไตล์มินิมอล สว่าง โล่ง โปร่ง ให้บรรยากาศผ่อนคลาย', '43/22 ราษฎร์ยินดี ซอย 6/1 ตำบล หาดใหญ่ อำเภอหาดใหญ่ สงขลา', '11:00-22:00', 'http://localhost:3001/uploads/1774737937099.jpg', ''),
+(6, 'บัวลอยหลังวัง ', 'Bua Loy Lang Wang', 'ของหวาน', 'ร้านบัวลอยสไตล์วินเทจ มีขนมหวานอื่น ๆ หลายเมนู', '544, 1 ถ.ธรรมนูญวิถี ตำบล หาดใหญ่ อำเภอหาดใหญ่ สงขลา ', '16:00-22:00', 'http://localhost:3001/uploads/1774737954253.webp', ''),
+(7, 'พริกขี้หนู หมูกระทะ', 'Chili peppers for Thai-style BBQ.', 'ปิ้งย่าง/ชาบู', 'ร้านกว้างขวาง นั่งสบาย ไม่แออัด พนักงานบริการดีมาก คอยสอดส่อง', '81/1 ถ.ไทยอาคาร', '16:00-22:00', 'http://localhost:3001/uploads/1774738012120.jpg', ''),
+(8, 'เรือนเพชรหมูกระทะ', 'Ruen Phet Moo Krata', 'ปิ้งย่าง/ชาบู', 'ร้านหมูกระทะที่อยู่คู่เมืองหาดใหญ่มาอย่างยาวนาน', 'ถ.ศรีภูวนาถ', '16:00-22:00', 'http://localhost:3001/uploads/1774738024134.webp', ''),
+(9, 'แคมป์ยาร์ด ', 'Camp Yard ', 'นั้งชิว', '', '50/6 ถนน ศรีภูวนารถ ตำบล หาดใหญ่ อำเภอหาดใหญ่ สงขลา', '12:00-22:00', 'http://localhost:3001/uploads/1774738061608.webp', ''),
+(10, 'ช้อนทอง', 'Golden spoon', 'หมาล่า', ' สูตรหมาล่า ร้านดังจากหาดใหญ่ การันตีความอร่อยจาก', '4 ซอยเลี่ยม-เอียดอุทิศ ตำบล คอหงส์ อำเภอหาดใหญ่ สงขลา', '11:00-03:00', 'http://localhost:3001/uploads/1774738078171.jpg', ''),
+(11, 'กรหมี่ไก่', 'Chicken noodles', 'ก๋วยเตี๋ยว', 'ร้านบะหมี่ท้องถิ่น เส้นบะหมี่นุ่ม ลวกเส้นสดใหม่ทุกชาม', 'ถ.ผดุงภัคดี ตำบล หาดใหญ่ อำเภอหาดใหญ่ สงขลา', '15:00-21:00', 'http://localhost:3001/uploads/1774738092304.webp', '');
 
 -- --------------------------------------------------------
 
@@ -187,6 +222,12 @@ ALTER TABLE `articles`
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `article_id` (`article_id`);
+
+--
+-- Indexes for table `food`
+--
+ALTER TABLE `food`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `travel`
