@@ -29,7 +29,7 @@ export default function Login() {
         <form onSubmit={handleLogin}>
           <img
             className="mb-4"
-            src="/ไก่ๆ.PNG"
+            src="/logo.PNG"
             alt=""
             height="120"
           />
