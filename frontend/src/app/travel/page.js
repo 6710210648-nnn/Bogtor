@@ -141,10 +141,28 @@ export default function TravelPage() {
   };
 
   // ✨ Upload รูป (ตัวอย่าง)
-  const handleUpload = (e) => {
-    const file = e.target.files[0];
-    setForm({ ...form, image: file, image: URL.createObjectURL(file) });
-  };
+ const handleUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  setUploading(true);
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  try {
+    const res = await fetch("http://localhost:3001/upload", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+    setForm((prev) => ({ ...prev, image: data.imageUrl }));
+  } catch (err) {
+    alert("Upload ไม่สำเร็จ");
+  } finally {
+    setUploading(false);
+  }
+};
 
   // ✨ Save (POST / PUT)
 const handleSave = async () => {
