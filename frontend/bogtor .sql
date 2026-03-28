@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2026 at 04:05 PM
+-- Generation Time: Mar 28, 2026 at 04:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -47,6 +47,50 @@ INSERT INTO `admins` (`id`, `name`, `email`, `password`, `gender`, `phone`, `ima
 (3, 'kate', 'kate@gmail.com', '1234', 'female', '0833333333', 'https://i.pravatar.cc/150?img=3'),
 (4, 'yammii', 'yam@gmail.com', '1234', 'female', '0844444444', 'https://i.pravatar.cc/150?img=4'),
 (5, 'meile', 'mei5@gmail.com', '1234', 'female', '0855555555', 'https://i.pravatar.cc/150?img=5');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `articles`
+--
+
+CREATE TABLE `articles` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `author` varchar(100) DEFAULT 'ผู้ใช้นิรนาม',
+  `image_url` varchar(500) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `articles`
+--
+
+INSERT INTO `articles` (`id`, `title`, `content`, `author`, `image_url`, `created_at`) VALUES
+(1, 'ตำในบ้าน', 'เป็ฯร้านที่ราคาถูกและให้เยอะมากๆ ปริมาณคุ้มราคา', 'นักชิมธีรเดช', 'http://localhost:3001/uploads/1774713252371.jpg', '2026-03-28 22:38:38');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `article_id` int(11) NOT NULL,
+  `author` varchar(100) DEFAULT 'ผู้ใช้นิรนาม',
+  `text` text NOT NULL,
+  `rating` int(11) DEFAULT 0,
+  `created_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `article_id`, `author`, `text`, `rating`, `created_at`) VALUES
+(1, 1, 'นุส', 'ไม่ร่อย', 4, '2026-03-28 22:40:06');
 
 -- --------------------------------------------------------
 
@@ -129,6 +173,19 @@ ALTER TABLE `admins`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `articles`
+--
+ALTER TABLE `articles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `article_id` (`article_id`);
+
+--
 -- Indexes for table `travel`
 --
 ALTER TABLE `travel`
@@ -153,16 +210,32 @@ ALTER TABLE `admins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `travel`
+-- AUTO_INCREMENT for table `articles`
 --
-ALTER TABLE `travel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+ALTER TABLE `articles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

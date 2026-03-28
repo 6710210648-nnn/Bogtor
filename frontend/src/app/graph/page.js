@@ -80,10 +80,10 @@ export default function BlogPage() {
         )}
       </div>
 
-      <div style={summarySimple}>
-  <p>Male: {male}</p>
-  <p>Female: {female}</p>
-</div>
+        <div style={summarySimple}>
+           <p>Male: {male}</p>
+           <p>Female: {female}</p>
+        </div>
     </div>
   );
 }
