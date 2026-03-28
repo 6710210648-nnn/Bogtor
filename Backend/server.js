@@ -12,7 +12,6 @@ const PORT = 3001;
 // ================= MIDDLEWARE =================
 app.use(cors());
 app.use(express.json());
-app.use('/uploads_travel', express.static(path.join(__dirname, 'uploads_travel'))); //ของเเยม//
 
 // ================= CREATE UPLOAD FOLDER =================
 if (!fs.existsSync("uploads")) {
