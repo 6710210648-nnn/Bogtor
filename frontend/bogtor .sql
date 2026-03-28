@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 28, 2026 at 04:59 PM
+-- Generation Time: Mar 28, 2026 at 07:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -68,7 +68,7 @@ CREATE TABLE `articles` (
 --
 
 INSERT INTO `articles` (`id`, `title`, `content`, `author`, `image_url`, `created_at`) VALUES
-(1, 'ตำในบ้าน', 'เป็ฯร้านที่ราคาถูกและให้เยอะมากๆ ปริมาณคุ้มราคา', 'นักชิมธีรเดช', 'http://localhost:3001/uploads/1774713252371.jpg', '2026-03-28 22:38:38');
+(1, 'ตำในบ้าน', 'เป็ฯร้านที่ราคาถูกและให้เยอะมากๆ ปริมาณคุ้มราคา', 'นักชิมธีรเดช', 'http://localhost:3001/uploads/1774719870763.jpg', '2026-03-28 22:38:38');
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,9 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`id`, `article_id`, `author`, `text`, `rating`, `created_at`) VALUES
-(1, 1, 'นุส', 'ไม่ร่อย', 4, '2026-03-28 22:40:06');
+(1, 1, 'นุส', 'ไม่ร่อย', 4, '2026-03-28 22:40:06'),
+(2, 1, 'ผู้ใช้นิรนาม', 'nggh', 0, '2026-03-29 00:44:49'),
+(3, 1, 'jjj', 'jjj', 4, '2026-03-29 00:44:55');
 
 -- --------------------------------------------------------
 
@@ -100,14 +102,14 @@ INSERT INTO `comments` (`id`, `article_id`, `author`, `text`, `rating`, `created
 
 CREATE TABLE `travel` (
   `id` int(11) NOT NULL,
-  `title_th` varchar(255) NOT NULL,
-  `title_en` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `location_address` text NOT NULL,
-  `map_url` text NOT NULL,
-  `opening_hours` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_croatian_ci NOT NULL,
-  `image` varchar(255) NOT NULL,
-  `category` varchar(49) NOT NULL
+  `title_th` varchar(255) DEFAULT NULL,
+  `title_en` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `location_address` text DEFAULT NULL,
+  `map_url` text DEFAULT NULL,
+  `opening_hours` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_croatian_ci DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `category` varchar(49) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -115,16 +117,17 @@ CREATE TABLE `travel` (
 --
 
 INSERT INTO `travel` (`id`, `title_th`, `title_en`, `description`, `location_address`, `map_url`, `opening_hours`, `image`, `category`) VALUES
-(1, 'ตลาดกิมหยง', 'Kim Yong Market', 'ศูนย์รวมของฝากจากต่างประเทศ ผลไม้สด ผลไม้อบแห้ง และถั่วนานาชนิดที่เป็นเอกลักษณ์ของเมืองหาดใหญ่', 'ถนนศุภสารรังสรรค์ ตำบลหาดใหญ่ อำเภอหาดใหญ่ จังหวัดสงขลา', '', '06:00 - 18:00 น.', '/gimyong.jpg', 'ตลาด/ช้อปปิ้ง'),
-(2, 'สวนสาธารณะเทศบาลนครหาดใหญ่', 'Hat Yai Municipal Park', 'แลนด์มาร์คสำคัญที่มีกระเช้าลอยฟ้า พระพุทธมงคลมหาราช และจุดชมวิวเมืองหาดใหญ่แบบ 360 องศา', 'ถนนกาญจนวนิช ตำบลคอหงส์ อำเภอหาดใหญ่ จังหวัดสงขลา', '', '05:00 - 20:00 น.', '/HatyaiPark.jpg', 'ธรรมชาติ'),
-(3, 'ตลาดน้ำคลองแห', 'Khlong Hae Floating Market', 'ตลาดน้ำแห่งแรกของภาคใต้ สัมผัสวิถีชีวิตชาวบ้าน ชิมอาหารท้องถิ่นที่ขายบนเรือพาย และใช้ภาชนะจากธรรมชาติ', 'ตำบลคลองแห อำเภอหาดใหญ่ จังหวัดสงขลา', '', '13:00 - 21:00 น', '/คลองเเห.jpg', 'ตลาด/ช้อปปิ้ง'),
-(4, 'วัดหาดใหญ่ใน', 'Mahattamangkalaram', 'ตลาดน้ำแห่งแรกของภาคใต้ สัมผัสวิถีชีวิตชาวบ้าน ชิมอาหารท้องถิ่นที่ขายบนเรือพาย และใช้ภาชนะจากธรรมชาติ', 'ถนนเพชรเกษม อำเภอหาดใหญ่ จังหวัดสงขลา', '', '07:00 - 18:00 น.', '/วัดหาดใหญ่ใน.jpg', 'ศาสนา'),
-(5, 'น้ำตกโตนงาช้าง', 'Ton Nga Chang Waterfall', 'น้ำตกที่มีชื่อเสียงระดับจังหวัด มีทั้งหมด 7 ชั้น โดยเฉพาะชั้นที่ 3 (งาช้าง) ที่มีความสวยงามเป็นพิเศษ', 'เขตรักษาพันธุ์สัตว์ป่าโตนงาช้าง อำเภอหาดใหญ่ จังหวัดสงขลา', '', '09:00 - 16:00 น.', '/โตนงาช้าง.jpg', 'ธรรมชาติ'),
-(6, 'เซ็นทรัล หาดใหญ่', 'Central Hatyai', 'ห้างสรรพสินค้าที่ใหญ่และทันสมัยที่สุดในหาดใหญ่ ครบครันด้วยสินค้าและบริการ', 'ถนนกาญจนวณิช อำเภอหาดใหญ่ จังหวัดสงขลา', '', '10:00 - 21:00 น.', '/เซนทรัล.jpg', 'ตลาด/ช้อปปิ้ง'),
-(7, 'มัสยิดกลางประจำจังหวัดสงขลา', 'Songkhla Central Mosque', 'ศาสนสถานอันวิจิตรงดงาม เป็นศูนย์รวมจิตใจของชาวมุสลิมและเป็นจุดถ่ายภาพยอดนิยม', 'ตำบลคลองแห อำเภอหาดใหญ่ จังหวัดสงขลา', '', '08:30 - 15:30 น.', '', 'ศาสนา'),
-(8, 'วัดฉื่อฉาง', 'Tse Chang Temple', 'วัดจีนที่มีสถาปัตยกรรมโดดเด่น และเป็นศูนย์กลางการจัดงานเทศกาลสำคัญของชาวไทยเชื้อสายจีน', 'ถนนศุภสารรังสรรค์ อำเภอหาดใหญ่ จังหวัดสงขลา', '', '07:00 - 19:00 น.', '/ฉือฉาง.jpg', 'ศาสนา'),
-(9, 'ตลาดกรีนเวย์ไนท์มาร์เก็ต', 'Greenway Night Market', 'ตลาดนัดกลางคืนยอดนิยม แหล่งรวมเสื้อผ้าแฟชั่น สินค้ามือสอง และโซนอาหารที่หลากหลาย', 'ถนนกาญจนวณิชย์ อำเภอหาดใหญ่ จังหวัดสงขลา', '', '17:00 - 22:00 น.', '/กรีนเว.jpg', 'ตลาด/ช้อปปิ้ง'),
-(10, 'พระมหาธาตุเจดีย์ไตรภพไตรมงคล', 'Maha That Chedi Triphop Tri Mongkhon', 'เจดีย์สแตนเลส (วัดสแตนเลส) ตั้งอยู่บนเขาคอหงส์ ภายในมีการจัดแสดงภาพวาดสามมิติและงานพุทธศิลป์', 'ถนนปุณณกัณฑ์ ตำบลคอหงส์ อำเภอ', '', 'เปิด 24 ชั่วโมง', '/jeady.jpg', 'ศาสนา');
+(1, 'ตลาดกิมหยง', 'Kim Yong Market', 'ศูนย์รวมของฝากจากต่างประเทศ ผลไม้สด ผลไม้อบแห้ง และถั่วนานาชนิดที่เป็นเอกลักษณ์ของเมืองหาดใหญ่', 'ถนนศุภสารรังสรรค์ ตำบลหาดใหญ่ อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/p7xX6ubMwd9fBRWC9', '06:00 - 18:00 น.', 'http://localhost:3001/uploads/1774721214689.jpg', 'ตลาด/ช้อปปิ้ง'),
+(2, 'สวนสาธารณะเทศบาลนครหาดใหญ่', 'Hat Yai Municipal Park', 'แลนด์มาร์คสำคัญที่มีกระเช้าลอยฟ้า พระพุทธมงคลมหาราช และจุดชมวิวเมืองหาดใหญ่แบบ 360 องศา', 'ถนนกาญจนวนิช ตำบลคอหงส์ อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/tyLJCs4knffs5FCh9', '05:00 - 20:00 น.', 'http://localhost:3001/uploads/1774721221655.jpg', 'ธรรมชาติ'),
+(3, 'ตลาดน้ำคลองแห', 'Khlong Hae Floating Market', 'ตลาดน้ำแห่งแรกของภาคใต้ สัมผัสวิถีชีวิตชาวบ้าน ชิมอาหารท้องถิ่นที่ขายบนเรือพาย และใช้ภาชนะจากธรรมชาติ', 'ตำบลคลองแห อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/WjY1K2Fyh1AvVwFx6', '13:00 - 21:00 น', 'http://localhost:3001/uploads/1774721232944.jpg', 'ตลาด/ช้อปปิ้ง'),
+(4, 'วัดหาดใหญ่ใน', 'Mahattamangkalaram', 'ตลาดน้ำแห่งแรกของภาคใต้ สัมผัสวิถีชีวิตชาวบ้าน ชิมอาหารท้องถิ่นที่ขายบนเรือพาย และใช้ภาชนะจากธรรมชาติ', 'ถนนเพชรเกษม อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/sa5zohW9ojCAkAS59', '07:00 - 18:00 น.', 'http://localhost:3001/uploads/1774721248959.jpg', 'ศาสนา'),
+(5, 'น้ำตกโตนงาช้าง', 'Ton Nga Chang Waterfall', 'น้ำตกที่มีชื่อเสียงระดับจังหวัด มีทั้งหมด 7 ชั้น โดยเฉพาะชั้นที่ 3 (งาช้าง) ที่มีความสวยงามเป็นพิเศษ', 'เขตรักษาพันธุ์สัตว์ป่าโตนงาช้าง อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/u3mY2JMWfueNo6QZ6', '09:00 - 16:00 น.', 'http://localhost:3001/uploads/1774721258132.jpg', 'ธรรมชาติ'),
+(6, 'เซ็นทรัล หาดใหญ่', 'Central Hatyai', 'ห้างสรรพสินค้าที่ใหญ่และทันสมัยที่สุดในหาดใหญ่ ครบครันด้วยสินค้าและบริการ', 'ถนนกาญจนวณิช อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/1kkxsBg7iBzawDGk9', '10:00 - 21:00 น.', 'http://localhost:3001/uploads/1774721276194.jpg', 'ตลาด/ช้อปปิ้ง'),
+(7, 'มัสยิดกลางประจำจังหวัดสงขลา', 'Songkhla Central Mosque', 'ศาสนสถานอันวิจิตรงดงาม เป็นศูนย์รวมจิตใจของชาวมุสลิมและเป็นจุดถ่ายภาพยอดนิยม', 'ตำบลคลองแห อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/ycB3t7MJ8X3Y3feY8', '08:30 - 15:30 น.', 'http://localhost:3001/uploads/1774721285071.jpg', 'ศาสนา'),
+(8, 'วัดฉื่อฉาง', 'Tse Chang Temple', 'วัดจีนที่มีสถาปัตยกรรมโดดเด่น และเป็นศูนย์กลางการจัดงานเทศกาลสำคัญของชาวไทยเชื้อสายจีน', 'ถนนศุภสารรังสรรค์ อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/NiwLJ6U1qmnssdjy9', '07:00 - 19:00 น.', 'http://localhost:3001/uploads/1774721313503.jpg', 'ศาสนา'),
+(9, 'ตลาดกรีนเวย์ไนท์มาร์เก็ต', 'Greenway Night Market', 'ตลาดนัดกลางคืนยอดนิยม แหล่งรวมเสื้อผ้าแฟชั่น สินค้ามือสอง และโซนอาหารที่หลากหลาย', 'ถนนกาญจนวณิชย์ อำเภอหาดใหญ่ จังหวัดสงขลา', 'https://maps.app.goo.gl/1voTQX7QFmbrX9u77', '17:00 - 22:00 น.', 'http://localhost:3001/uploads/1774721297184.jpg', 'ตลาด/ช้อปปิ้ง'),
+(10, 'พระมหาธาตุเจดีย์ไตรภพไตรมงคล', 'Maha That Chedi Triphop Tri Mongkhon', 'เจดีย์สแตนเลส (วัดสแตนเลส) ตั้งอยู่บนเขาคอหงส์ ภายในมีการจัดแสดงภาพวาดสามมิติและงานพุทธศิลป์', 'ถนนปุณณกัณฑ์ ตำบลคอหงส์ อำเภอ', 'https://maps.app.goo.gl/3pLENqyqmkWYF8ve6', 'เปิด 24 ชั่วโมง', 'http://localhost:3001/uploads/1774721305540.jpg', 'ศาสนา'),
+(12, 'เมืองเก่าโปรตุเกส ', 'Sino-Portuguese Architecture', 'ย่านตึกเก่า อาคารชิโนโปรตุกีส หาดใหญ่ เป็นสถาปัตยกรรมที่ผสมผสานกันระหว่าง จีน และ โปรตุเกส พบทางตอนใต้ของแหลมมาลายู', '130 ถนน นิพัทธ์อุทิศ 1 ตำบล หาดใหญ่ อำเภอหาดใหญ่ ', 'https://maps.app.goo.gl/nbcm2HmWB1tfUDtb6', '24 ชม.', 'http://localhost:3001/uploads/1774721156993.jpg', 'เรียนรู้');
 
 -- --------------------------------------------------------
 
@@ -146,20 +149,20 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `gender`, `phone`, `image_url`) VALUES
-(1, 'Somchai', 'somchai@gmail.com', 'male', '0861111111', 'http://localhost:3001/uploads/1774162527613.webp'),
-(2, 'Suda', 'suda@gmail.com', 'female', '0862222222', 'http://localhost:3001/uploads/1774162580518.jpg'),
-(3, 'Anan', 'anan@gmail.com', 'male', '0863333333', 'http://localhost:3001/uploads/1774162599606.jpg'),
-(4, 'Kanya', 'kanya@gmail.com', 'female', '0864444444', 'http://localhost:3001/uploads/1774162608615.jpg'),
-(5, 'Prasert', 'prasert@gmail.com', 'male', '0865555555', 'http://localhost:3001/uploads/1774162621945.jpg'),
-(6, 'Malee', 'malee@gmail.com', 'female', '0866666666', 'http://localhost:3001/uploads/1774162628012.jpg'),
-(7, 'Narin', 'narin@gmail.com', 'male', '0867777777', 'http://localhost:3001/uploads/1774162636267.jpg'),
-(8, 'Orn', 'orn@gmail.com', 'female', '0868888888', 'http://localhost:3001/uploads/1774162645670.jpeg'),
-(9, 'Wichai', 'wichai@gmail.com', 'male', '0869999999', 'http://localhost:3001/uploads/1774162654003.jpg'),
-(10, 'Pim', 'pim@gmail.com', 'female', '0870000000', 'http://localhost:3001/uploads/1774162663917.jpg'),
-(11, 'yam', 'yam@email.com', 'female', '0875401690', 'http://localhost:3001/uploads/1774162687952.webp'),
-(12, 'nusteekai', 'nnn648@gmail.com', 'female', '0987024598', 'http://localhost:3001/uploads/1774163037325.png'),
-(13, 'nusraknat', '', 'female', '0000000000', 'http://localhost:3001/uploads/1774163104871.jpg');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `gender`, `phone`, `image_url`) VALUES
+(1, 'Somchai', 'somchai@gmail.com', NULL, 'male', '0861111111', 'http://localhost:3001/uploads/1774162527613.webp'),
+(2, 'Suda', 'suda@gmail.com', NULL, 'female', '0862222222', 'http://localhost:3001/uploads/1774162580518.jpg'),
+(3, 'Anan', 'anan@gmail.com', NULL, 'male', '0863333333', 'http://localhost:3001/uploads/1774162599606.jpg'),
+(4, 'Kanya', 'kanya@gmail.com', NULL, 'female', '0864444444', 'http://localhost:3001/uploads/1774162608615.jpg'),
+(5, 'Prasert', 'prasert@gmail.com', NULL, 'male', '0865555555', 'http://localhost:3001/uploads/1774162621945.jpg'),
+(6, 'Malee', 'malee@gmail.com', NULL, 'female', '0866666666', 'http://localhost:3001/uploads/1774162628012.jpg'),
+(7, 'Narin', 'narin@gmail.com', NULL, 'male', '0867777777', 'http://localhost:3001/uploads/1774162636267.jpg'),
+(8, 'Orn', 'orn@gmail.com', NULL, 'female', '0868888888', 'http://localhost:3001/uploads/1774162645670.jpeg'),
+(9, 'Wichai', 'wichai@gmail.com', NULL, 'male', '0869999999', 'http://localhost:3001/uploads/1774162654003.jpg'),
+(10, 'Pim', 'pim@gmail.com', NULL, 'female', '0870000000', 'http://localhost:3001/uploads/1774162663917.jpg'),
+(11, 'yam', 'yam@email.com', NULL, 'female', '0875401690', 'http://localhost:3001/uploads/1774162687952.webp'),
+(12, 'nusteekai', 'nnn648@gmail.com', NULL, 'female', '0987024598', 'http://localhost:3001/uploads/1774163037325.png'),
+(13, 'nusraknat', '', NULL, 'female', '0000000000', 'http://localhost:3001/uploads/1774163104871.jpg');
 
 --
 -- Indexes for dumped tables
@@ -219,7 +222,13 @@ ALTER TABLE `articles`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `travel`
+--
+ALTER TABLE `travel`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
