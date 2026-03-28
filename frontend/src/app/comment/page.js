@@ -21,7 +21,7 @@ function Header() {
         <a href="/dashboard" style={navLinkStyle}>หน้าแรก</a>
         <a href="/travel" style={navLinkStyle}>สถานที่ท่องเที่ยว</a>
         <a href="/food" style={navLinkStyle}>ร้านอาหาร</a>
-        <a href="/comment" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>บทความ</a>
+        <a href="/rating-dashboard" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>บทความ</a>
         <a href="/account" style={navLinkStyle}>ข้อมูลผู้ใช้</a>
         <button onClick={handleLogout} style={logoutBtnStyle}>Logout</button>
       </nav>
