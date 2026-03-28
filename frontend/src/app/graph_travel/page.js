@@ -54,10 +54,10 @@ const categoryCounts = categories.map((cat) => {
         label: "จำนวนสถานที่",
         data: categoryCounts,
         backgroundColor: [
-          "#ff569f", // สีส้ม (ตลาด/ช้อปปิ้ง)
+          "#afedb1", // สีส้ม (ตลาด/ช้อปปิ้ง)
           "#7cdcff", // สีเขียว (ธรรมชาติ)
           "#fffd92", // สีฟ้า (ศาสนา)
-          "#f793f0", // สีม่วง
+          "#ffa1ca", // สีม่วง
           "#abeab0", // สีแดง
         ],
         borderColor: "#ffffff",
