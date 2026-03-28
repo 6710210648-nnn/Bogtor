@@ -261,7 +261,7 @@ const handleSave = async () => {
             <div className="row g-0">
               <div className="col-md-4">
                 <img
-                  src={place.image && place.image.startsWith('http') ? place.image : (place.image ? `http://localhost:3001/uploads_travel/${place.image}`:'/placeholder.jpg')}
+                  src={place.image && place.image.startsWith('http') ? place.image : (place.image ? `http://localhost:3001/uploads/${place.image}`:'/placeholder.jpg')}
                   alt={place.title_th}
                   className="img-fluid h-100 w-100"
                   style={{ objectFit:"cover", minHeight:'250px' }}
