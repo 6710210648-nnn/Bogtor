@@ -144,7 +144,7 @@ export default function TravelPage() {
   // ✨ Upload รูป (ตัวอย่าง)
   const handleUpload = (e) => {
     const file = e.target.files[0];
-    setForm({ ...form, image: file, image_url: URL.createObjectURL(file) });
+    setForm({ ...form, image: file, image: URL.createObjectURL(file) });
   };
 
   // ✨ Save (POST หรือ PUT)
