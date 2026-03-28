@@ -199,7 +199,7 @@ app.get("/travel", (req, res) => {
 
 // 2. เพิ่มสถานที่ใหม่ (POST)
 app.post("/travel", (req, res) => {
-  const { title_th, title_en, description, category, location_address, map_url, opening_hours, image } = req.body;
+  const { title_th, title_en, description, category, location_address, map_url, opening_hours, image_url } = req.body;
   
   // สังเกต: ใน DB ของแยมชื่อคอลัมน์คือ 'image' (อิงตามรูป phpMyAdmin)
   const sql = `
@@ -207,21 +207,21 @@ app.post("/travel", (req, res) => {
     VALUES (?,?,?,?,?,?,?,?)
   `;
   
-  db.query(sql, [title_th, title_en, description, category, location_address, map_url, opening_hours, image], (err, result) => {
+  db.query(sql, [title_th, title_en, description, category, location_address, map_url, opening_hours, image_url], (err, result) => {
     if (err) {
       console.error("❌ Insert Error:", err);
       return res.status(500).json({ error: err.message });
     }
-    res.json({ success: true, message: "สร้างข้อมูลสำเร็จ", id: result.insertId });
+    res.json({ success: true, message: "Data created successfully", id: result.insertId });
   });
 });
 
 // 3. แก้ไขข้อมูล (PUT) - ตัวที่แยมติดปัญหา 404
 app.put("/travel/:id", (req, res) => {
   const id = req.params.id;
-  const { title_th, title_en, description, category, location_address, map_url, opening_hours, image } = req.body;
+  const { title_th, title_en, description, category, location_address, map_url, opening_hours, image_url } = req.body;
 
-  console.log("🛠️ กำลังอัปเดต ID:", id);
+  console.log("Updating ID:", id);
 
   const sql = `
     UPDATE travel 
@@ -239,10 +239,10 @@ app.put("/travel/:id", (req, res) => {
     }
     
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "ไม่พบข้อมูล ID นี้" });
+      return res.status(404).json({ message: "Data not found for this ID" });
     }
 
-    console.log("✅ บันทึกสำเร็จแล้วสำหรับ ID:", id);
+    console.log("Updated successfully:", id);
     res.json({ success: true });
   });
 });
@@ -252,7 +252,7 @@ app.delete("/travel/:id", (req, res) => {
   const id = req.params.id;
   db.query("DELETE FROM travel WHERE id=?", [id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json({ success: true, message: "ลบข้อมูลสำเร็จ" });
+    res.json({ success: true, message: "Deleted successfully" });
   });
 });
 
@@ -261,3 +261,78 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running http://localhost:${PORT}`);
 });
 
+
+
+// ================= ARTICLES =================
+
+// GET all articles (พร้อม comments)
+app.get("/articles", (req, res) => {
+  db.query("SELECT * FROM articles ORDER BY created_at DESC", (err, articles) => {
+    if (err) return res.status(500).json(err);
+
+    if (articles.length === 0) return res.json([]);
+
+    db.query("SELECT * FROM comments ORDER BY created_at ASC", (err2, comments) => {
+      if (err2) return res.status(500).json(err2);
+
+      const result = articles.map((a) => ({
+        ...a,
+        imageUrl: a.image_url,
+        createdAt: a.created_at,
+        comments: comments
+          .filter((c) => c.article_id === a.id)
+          .map((c) => ({ ...c, createdAt: c.created_at })),
+      }));
+      res.json(result);
+    });
+  });
+});
+
+// POST new article
+app.post("/articles", (req, res) => {
+  const { title, content, author, image_url } = req.body;
+  db.query(
+    "INSERT INTO articles (title, content, author, image_url) VALUES (?,?,?,?)",
+    [title, content, author || "ผู้ใช้นิรนาม", image_url || null],
+    (err, result) => {
+      if (err) return res.status(500).json(err);
+      res.json({ success: true, id: result.insertId });
+    }
+  );
+});
+
+// PUT update article
+app.put("/articles/:id", (req, res) => {
+  const { title, content, author, image_url } = req.body;
+  db.query(
+    "UPDATE articles SET title=?, content=?, author=?, image_url=? WHERE id=?",
+    [title, content, author, image_url, req.params.id],
+    (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ success: true });
+    }
+  );
+});
+
+// DELETE article
+app.delete("/articles/:id", (req, res) => {
+  db.query("DELETE FROM articles WHERE id=?", [req.params.id], (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ success: true });
+  });
+});
+
+// ================= COMMENTS =================
+
+// POST new comment
+app.post("/comments", (req, res) => {
+  const { article_id, author, text, rating } = req.body;
+  db.query(
+    "INSERT INTO comments (article_id, author, text, rating) VALUES (?,?,?,?)",
+    [article_id, author || "ผู้ใช้นิรนาม", text, rating || 0],
+    (err, result) => {
+      if (err) return res.status(500).json(err);
+      res.json({ success: true, id: result.insertId });
+    }
+  );
+});
