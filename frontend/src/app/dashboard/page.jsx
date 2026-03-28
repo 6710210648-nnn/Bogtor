@@ -94,7 +94,7 @@ export default function Dashboard() {
         }}
       >
         <img
-          src="/ไก่ๆ.PNG"
+          src="/logo.PNG"
           alt="BOGTOR Logo"
           style={{ width: "60px", height: "60px", marginRight: "20px" }}
         />
