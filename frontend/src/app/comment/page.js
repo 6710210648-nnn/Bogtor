@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+const API = "http://localhost:3001";
+
 // ================= HEADER =================
 function Header() {
   const router = useRouter();
@@ -13,7 +15,7 @@ function Header() {
   };
   return (
     <header style={{ backgroundColor: "#fff", display: "flex", alignItems: "center", padding: "10px 40px", boxShadow: "0 1px 6px rgb(0 0 0 / 0.1)", position: "sticky", top: 0, zIndex: 10 }}>
-      <img src="/ไก่ๆ.PNG" alt="BOGTOR Logo" style={{ width: "60px", height: "60px", marginRight: "20px" }} />
+      <img src="/logo.PNG" alt="BOGTOR Logo" style={{ width: "60px", height: "60px", marginRight: "20px" }} />
       <h1 style={{ fontWeight: "700", fontSize: "28px", color: "#333", margin: 0 }}>HAT YAI TRAVEL & FOOD</h1>
       <nav style={{ marginLeft: "auto", display: "flex", gap: "24px", fontWeight: "600", fontSize: "16px", color: "#555" }}>
         <a href="/dashboard" style={navLinkStyle}>หน้าแรก</a>
@@ -68,38 +70,92 @@ function StarPicker({ value, onChange }) {
 export default function CommentPage() {
   const router = useRouter();
 
-  const [view, setView] = useState("list"); // "list" | "detail" | "form"
+  const [view, setView] = useState("list");
   const [articles, setArticles] = useState([]);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [editArticle, setEditArticle] = useState(null);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
-
-  // บันทึกลง localStorage
-  const saveArticles = (list) => {
-    localStorage.setItem("foodArticles", JSON.stringify(list));
-    setArticles(list);
+  // โหลดข้อมูลจาก backend
+  const fetchArticles = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${API}/articles`);
+      const data = await res.json();
+      setArticles(data);
+    } catch (err) {
+      console.error("โหลดบทความไม่ได้:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSaveArticle = (article) => {
-    const newList = editArticle
-      ? articles.map((a) => (a.id === article.id ? article : a))
-      : [article, ...articles];
-    saveArticles(newList);
-    setEditArticle(null);
-    setSelectedArticle(article);
-    setView("detail");
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+
+  // บันทึก (สร้างใหม่ หรือ แก้ไข)
+  const handleSaveArticle = async (article) => {
+    try {
+      if (editArticle) {
+        // PUT — แก้ไข
+        await fetch(`${API}/articles/${article.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: article.title,
+            content: article.content,
+            author: article.author,
+            image_url: article.imageUrl,
+          }),
+        });
+      } else {
+        // POST — สร้างใหม่
+        const res = await fetch(`${API}/articles`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: article.title,
+            content: article.content,
+            author: article.author,
+            image_url: article.imageUrl,
+          }),
+        });
+        const data = await res.json();
+        article.id = data.id;
+      }
+
+      // โหลดข้อมูลใหม่จาก DB
+      const fresh = await fetch(`${API}/articles`).then((r) => r.json());
+      setArticles(fresh);
+      setEditArticle(null);
+      const updated = fresh.find((a) => a.id === article.id) || fresh[0];
+      setSelectedArticle(updated);
+      setView("detail");
+    } catch (err) {
+      console.error("บันทึกบทความไม่ได้:", err);
+      alert("เกิดข้อผิดพลาด ไม่สามารถบันทึกได้");
+    }
   };
 
+  // อัปเดต article ใน state (ใช้หลังเพิ่มคอมเม้น)
   const handleUpdateArticle = (article) => {
-    saveArticles(articles.map((a) => (a.id === article.id ? article : a)));
+    setArticles((prev) => prev.map((a) => (a.id === article.id ? article : a)));
     setSelectedArticle(article);
   };
 
-  const handleDelete = (id) => {
+  // ลบบทความ
+  const handleDelete = async (id) => {
     if (!confirm("ต้องการลบบทความนี้ไหม?")) return;
-    saveArticles(articles.filter((a) => a.id !== id));
-    setView("list");
+    try {
+      await fetch(`${API}/articles/${id}`, { method: "DELETE" });
+      setArticles((prev) => prev.filter((a) => a.id !== id));
+      setView("list");
+    } catch (err) {
+      console.error("ลบบทความไม่ได้:", err);
+      alert("เกิดข้อผิดพลาด ไม่สามารถลบได้");
+    }
   };
 
   const filtered = articles.filter(
@@ -143,8 +199,16 @@ export default function CommentPage() {
             <span className="text-muted">{filtered.length} บทความ</span>
           </div>
 
+          {/* Loading */}
+          {loading && (
+            <div className="text-center py-5">
+              <div className="spinner-border text-primary" role="status" />
+              <p className="text-muted mt-3">กำลังโหลด...</p>
+            </div>
+          )}
+
           {/* ไม่มีบทความ */}
-          {filtered.length === 0 && (
+          {!loading && filtered.length === 0 && (
             <div className="text-center py-5">
               <div style={{ fontSize: "4rem" }}>🍽️</div>
               <h4 className="text-muted mt-3">ยังไม่มีบทความ</h4>
@@ -152,7 +216,7 @@ export default function CommentPage() {
           )}
 
           {/* รายการบทความ */}
-          {filtered.map((article) => (
+          {!loading && filtered.map((article) => (
             <div className="row mb-5 pb-5 border-bottom" key={article.id}>
 
               {/* รูปภาพ */}
@@ -245,28 +309,43 @@ function FormView({ editArticle, onBack, onSave }) {
   const [imageUrl, setImageUrl] = useState(editArticle?.imageUrl || "");
   const [uploadPreview, setUploadPreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => { setUploadPreview(ev.target.result); setImageUrl(""); };
-    reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch("http://localhost:3001/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      setImageUrl(data.imageUrl);
+      setUploadPreview(data.imageUrl);
+    } catch (err) {
+      alert("อัพโหลดรูปไม่ได้ ลองใหม่อีกครั้ง");
+    }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const e = {};
     if (!title.trim()) e.title = "กรุณากรอกชื่อบทความ";
     if (!content.trim()) e.content = "กรุณากรอกเนื้อหา";
     if (Object.keys(e).length > 0) { setErrors(e); return; }
 
+    setSaving(true);
     const finalImage = uploadPreview || imageUrl || null;
 
-    if (isEdit) {
-      onSave({ ...editArticle, title: title.trim(), content: content.trim(), author: author.trim() || "ผู้ใช้นิรนาม", imageUrl: finalImage });
-    } else {
-      onSave({ id: Date.now(), title: title.trim(), content: content.trim(), author: author.trim() || "ผู้ใช้นิรนาม", imageUrl: finalImage, createdAt: new Date().toISOString(), comments: [] });
-    }
+    const article = isEdit
+      ? { ...editArticle, title: title.trim(), content: content.trim(), author: author.trim() || "ผู้ใช้นิรนาม", imageUrl: finalImage }
+      : { title: title.trim(), content: content.trim(), author: author.trim() || "ผู้ใช้นิรนาม", imageUrl: finalImage, createdAt: new Date().toISOString(), comments: [] };
+
+    await onSave(article);
+    setSaving(false);
   };
 
   const displayImage = uploadPreview || imageUrl;
@@ -353,8 +432,13 @@ function FormView({ editArticle, onBack, onSave }) {
           </div>
         </div>
 
-        <button className="btn btn-primary btn-lg rounded-pill shadow-sm mt-4" style={{ minWidth: "220px" }} onClick={handleSubmit}>
-          {isEdit ? "💾 บันทึกการแก้ไข" : "🍽️ เผยแพร่บทความ"}
+        <button
+          className="btn btn-primary btn-lg rounded-pill shadow-sm mt-4"
+          style={{ minWidth: "220px" }}
+          onClick={handleSubmit}
+          disabled={saving}
+        >
+          {saving ? "⏳ กำลังบันทึก..." : isEdit ? "💾 บันทึกการแก้ไข" : "🍽️ เผยแพร่บทความ"}
         </button>
       </div>
     </>
@@ -367,25 +451,47 @@ function DetailView({ article: initArticle, onBack, onEdit, onDelete, onUpdate }
   const [commentAuthor, setCommentAuthor] = useState("");
   const [commentText, setCommentText] = useState("");
   const [commentRating, setCommentRating] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
 
   const formatDate = (iso) =>
     new Date(iso).toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (!commentText.trim()) return;
-    const newComment = {
-      id: Date.now(),
-      author: commentAuthor.trim() || "ผู้ใช้นิรนาม",
-      text: commentText.trim(),
-      rating: commentRating,
-      createdAt: new Date().toISOString(),
-    };
-    const updated = { ...article, comments: [...(article.comments || []), newComment] };
-    setArticle(updated);
-    onUpdate(updated);
-    setCommentAuthor("");
-    setCommentText("");
-    setCommentRating(0);
+    setSubmitting(true);
+    try {
+      const res = await fetch(`${API}/comments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          article_id: article.id,
+          author: commentAuthor.trim() || "ผู้ใช้นิรนาม",
+          text: commentText.trim(),
+          rating: commentRating,
+        }),
+      });
+      const data = await res.json();
+
+      const newComment = {
+        id: data.id,
+        author: commentAuthor.trim() || "ผู้ใช้นิรนาม",
+        text: commentText.trim(),
+        rating: commentRating,
+        createdAt: new Date().toISOString(),
+      };
+
+      const updated = { ...article, comments: [...(article.comments || []), newComment] };
+      setArticle(updated);
+      onUpdate(updated);
+      setCommentAuthor("");
+      setCommentText("");
+      setCommentRating(0);
+    } catch (err) {
+      console.error("ส่งคอมเม้นไม่ได้:", err);
+      alert("เกิดข้อผิดพลาด ไม่สามารถส่งความเห็นได้");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const ratings = (article.comments || []).filter((c) => c.rating > 0);
@@ -481,8 +587,12 @@ function DetailView({ article: initArticle, onBack, onEdit, onDelete, onUpdate }
             <textarea className="form-control mb-3" rows={4} placeholder="เขียนความเห็นของคุณ..."
               value={commentText} onChange={(e) => setCommentText(e.target.value)}
               style={{ borderRadius: "10px", resize: "vertical" }} />
-            <button className="btn btn-primary btn-lg rounded-pill shadow-sm" onClick={handleAddComment} disabled={!commentText.trim()}>
-              ส่งความเห็น →
+            <button
+              className="btn btn-primary btn-lg rounded-pill shadow-sm"
+              onClick={handleAddComment}
+              disabled={!commentText.trim() || submitting}
+            >
+              {submitting ? "⏳ กำลังส่ง..." : "ส่งความเห็น →"}
             </button>
           </div>
         </div>

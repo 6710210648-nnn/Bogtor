@@ -27,7 +27,7 @@ function Header() {
       }}
     >
       <img
-        src="/ไก่ๆ.PNG"
+        src="/logo.PNG"
         alt="BOGTOR Logo"
         style={{ width: "60px", height: "60px", marginRight: "20px" }}
       />
@@ -131,7 +131,10 @@ export default function AdminPage() {
       await fetch("http://localhost:3001/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+              ...form,
+            password: "1234"
+}),
       });
     }
 
