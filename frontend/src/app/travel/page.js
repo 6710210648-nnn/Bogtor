@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import "bootstrap/dist/css/bootstrap.min.css";
-// เพิ่ม useEffect เข้าไปในปีกกาด้านล่างนี้
 import React, { useState, useEffect } from 'react';
 
 /* ================= HEADER ================= */
@@ -30,7 +29,7 @@ function Header() {
       }}
     >
       <img
-        src="/ไก่ๆ.PNG"
+        src="/logo.PNG"
         alt="BOGTOR Logo"
         style={{ width: "60px", height: "60px", marginRight: "20px" }}
       />
@@ -88,7 +87,7 @@ export default function TravelPage() {
   location_address: "",
   map_url: "",
   opening_hours: "",
-  image_url: null
+  image_url: "",
 });
 
   const [uploading, setUploading] = useState(false);
@@ -129,7 +128,7 @@ export default function TravelPage() {
       location_address: "",
       map_url: "",
       opening_hours: "",
-      image: null,
+      image: "",
     });
     setIsOpen(true);
   };
@@ -137,7 +136,7 @@ export default function TravelPage() {
   // ✨ ปุ่มแก้ไขสถานที่
   const handleEdit = (place) => {
     setIsEdit(true);
-    setForm({ ...place, image_url: place.image || "" });
+    setForm({ ...place, image: place.image || "" });
     setIsOpen(true);
   };
 
@@ -147,23 +146,25 @@ export default function TravelPage() {
     setForm({ ...form, image: file, image: URL.createObjectURL(file) });
   };
 
-  // ✨ Save (POST หรือ PUT)
-  const handleSave = async () => {
+  // ✨ Save (POST / PUT)
+const handleSave = async () => {
   try {
-    const url = isEdit ? `http://localhost:3001/travel/${form.id}` : "http://localhost:3001/travel";
+    const url = isEdit
+      ? `http://localhost:3001/travel/${form.id}`
+      : "http://localhost:3001/travel";
+
     const method = isEdit ? "PUT" : "POST";
 
     const payload = {
-      title_th: form.title_th || "No Title",
-      title_en: form.title_en || "No Title",
-      description: form.description || "",
-      category: form.category || "ทั่วไป",
-      location_address: form.location_address || "",
-      map_url: form.map_url || "",
-      opening_hours: form.opening_hours || "",
-      // ลองคอมเมนต์บรรทัดนี้ออกก่อนเพื่อเช็กว่าพังเพราะรูปไหม
-      // image_url: form.image_url 
-    };
+  title_th: form.title_th || "No Title",
+  title_en: form.title_en || "No Title",
+  description: form.description || "",
+  category: form.category || "ทั่วไป",
+  location_address: form.location_address || "",
+  map_url: form.map_url || "",
+  opening_hours: form.opening_hours || "",
+  image_url: form.image || "default.jpg"
+};
 
     const res = await fetch(url, {
       method,
@@ -171,18 +172,19 @@ export default function TravelPage() {
       body: JSON.stringify(payload)
     });
 
+    const data = await res.json();
+
     if (!res.ok) {
-      // ดึง Error Message จากฝั่ง Server ออกมาดู
-      const errorDetail = await res.json(); 
-      console.log("Server Error Detail:", errorDetail);
-      throw new Error(`Server error: ${res.status}`);
+      console.log("❌ Backend error:", data);
+      throw new Error("Save failed");
     }
 
     setIsOpen(false);
     fetchTravelData();
+
   } catch (err) {
-    console.error("Save Error:", err);
-    alert("บันทึกไม่สำเร็จ! ลองเช็กที่ Console ของตัวโปรแกรม Backend (Terminal)");
+    console.error("🔥 Save Error:", err);
+    alert("บันทึกไม่สำเร็จ!");
   }
 };
 
@@ -273,8 +275,7 @@ export default function TravelPage() {
                    ลบ
                 </button>
               </div>
-              </div>
-            </div>
+              </div></div>
           </div>
         ))}
 
