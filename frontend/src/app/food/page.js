@@ -183,7 +183,7 @@ export default function FoodPage() {
         description: form.description || "",
         location: form.location || "",
         opening_hours: form.opening_hours || "",
-        image_url: form.image_url || "",
+        image: form.image_url || "",
       };
 
       const res = await fetch(url, {
@@ -217,7 +217,7 @@ export default function FoodPage() {
   const getImageSrc = (food) => {
     if (!food.image) return "https://via.placeholder.com/400x250?text=No+Image";
     if (food.image.startsWith("http")) return food.image;
-    return `http://localhost:3001/uploads_food/${food.image}`;
+    return `http://localhost:3001/uploads/${food.image}`;
   };
 
   /* ================= STYLES ================= */
