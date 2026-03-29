@@ -47,7 +47,7 @@ function Header() {
         <a href="/dashboard" style={navLinkStyle}>หน้าแรก</a>
         <a href="/travel" style={navLinkStyle}>สถานที่ท่องเที่ยว</a>
         <a
-          href="/food"
+          href="/graph_food"
           style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}
         >
           ร้านอาหาร
