@@ -88,7 +88,7 @@ const categoryCounts = categories.map((cat) => {
         </button>
       </div>
 
-      <h1 style={title}>📊 สรุปหมวดหมู่สถานที่ท่องเที่ยว</h1>
+      <h1 style={title}>📊📐สรุปหมวดหมู่สถานที่ท่องเที่ยว</h1>
 
       <div style={card}>
         <h3 style={cardSubTitle}>สัดส่วนสถานที่เที่ยวตามหมวดหมู่ (Total: {travelData.length})</h3>
