@@ -255,13 +255,6 @@ app.delete("/travel/:id", (req, res) => {
   });
 });
 
-// ================= START =================
-app.listen(PORT, () => {
-  console.log(`🚀 Server running http://localhost:${PORT}`);
-});
-
-
-
 // ================= ARTICLES =================
 
 // GET all articles (พร้อม comments)
@@ -335,6 +328,7 @@ app.post("/comments", (req, res) => {
     }
   );
 });
+ 
 
 // ================= FOOD CRUD =================
  
@@ -409,4 +403,9 @@ app.delete("/food/:id", (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ success: true, message: "Deleted successfully" });
   });
+});
+
+// ================= START =================
+app.listen(PORT, () => {
+  console.log(`🚀 Server running http://localhost:${PORT}`);
 });
