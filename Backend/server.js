@@ -416,3 +416,46 @@ app.delete("/food/:id", (req, res) => {
 
 
 
+
+// ================= FOOD =================
+
+// GET all food
+app.get("/food", (req, res) => {
+  db.query("SELECT * FROM food", (err, result) => {
+    if (err) return res.status(500).json(err);
+    res.json(result);
+  });
+});
+
+// POST new food
+app.post("/food", (req, res) => {
+  const { name_th, name_en, type, description, location, opening_hours, image, map_url } = req.body;
+  const sql = `
+    INSERT INTO food (name_th, name_en, type, description, location, opening_hours, image, map_url)
+    VALUES (?,?,?,?,?,?,?,?)
+  `;
+  db.query(sql, [name_th, name_en, type, description, location, opening_hours, image || "", map_url || ""], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true, id: result.insertId });
+  });
+});
+
+// PUT update food
+app.put("/food/:id", (req, res) => {
+  const { name_th, name_en, type, description, location, opening_hours, image, map_url } = req.body;
+  const sql = `
+    UPDATE food SET name_th=?, name_en=?, type=?, description=?, location=?, opening_hours=?, image=?, map_url=? WHERE id=?
+  `;
+  db.query(sql, [name_th, name_en, type, description, location, opening_hours, image, map_url, req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  });
+});
+
+// DELETE food
+app.delete("/food/:id", (req, res) => {
+  db.query("DELETE FROM food WHERE id=?", [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
+  });
+});

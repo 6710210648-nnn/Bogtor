@@ -216,6 +216,22 @@ const handleSave = async () => {
   };
 
   // Styles ของ Modal
+  const router = useRouter();
+
+  const goToArticle = (place) => {
+    const imgSrc = place.image
+      ? (place.image.startsWith("http") ? place.image : `http://localhost:3001/uploads/${place.image}`)
+      : "";
+    const params = new URLSearchParams({
+      type: "travel",
+      title: place.title_th || "",
+      image: imgSrc,
+      desc: place.description || "",
+      location: place.location_address || "",
+    });
+    router.push(`/comment?${params.toString()}`);
+  };
+
   const modalOverlay = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display:'flex', justifyContent:'center', alignItems:'center', zIndex: 999 };
   const modalStyle = { background:'white', padding:'20px', borderRadius:'10px', width:'400px', maxHeight:'90vh', overflowY:'auto' };
   const inputStyle = { width:'100%', padding:'8px', margin:'5px 0', borderRadius:'5px', border:'1px solid #ccc' };
@@ -297,6 +313,8 @@ const handleSave = async () => {
           </div>
 
           <div className="mt-auto d-flex gap-2">
+            <button className="btn btn-article rounded-pill px-3 btn-sm" onClick={() => goToArticle(place)}>
+              📝 อ่านบทความ</button>
             <button className="btn btn-maps   rounded-pill px-3 btn-sm" onClick={() => window.open(place.map_url, "_blank")}>
               <i className="bi bi-pin-map-fill me-1" /> Maps</button>
             <button className="btn btn-edit   rounded-pill px-3 btn-sm" onClick={() => handleEdit(place)}>แก้ไข</button>
@@ -364,6 +382,12 @@ const handleSave = async () => {
           background: white;
           color: #555;
           border: 1px solid #eee;
+        }
+
+        .btn-article {
+          background: #ffe08a;
+          color: #000;
+          border: none;
         }
 
         .btn-maps {
