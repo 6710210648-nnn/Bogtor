@@ -27,7 +27,7 @@ function Header() {
       }}
     >
       <img
-        src="/ไก่ๆ.PNG"
+        src="/logo.PNG"
         alt="BOGTOR Logo"
         style={{ width: "60px", height: "60px", marginRight: "20px" }}
       />
@@ -62,6 +62,8 @@ function Header() {
 
 /* ================= PAGE ================= */
 export default function FoodPage() {
+  const router = useRouter();
+
   const [foodData, setFoodData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -211,6 +213,21 @@ export default function FoodPage() {
     if (!confirm("ต้องการลบร้านอาหารนี้จริงๆ หรือ?")) return;
     await fetch(`http://localhost:3001/food/${id}`, { method: "DELETE" });
     fetchFoodData();
+  };
+
+  /* ---------- Go to article ---------- */
+  const goToArticle = (food) => {
+    const imgSrc = food.image
+      ? (food.image.startsWith("http") ? food.image : `http://localhost:3001/uploads/${food.image}`)
+      : "";
+    const params = new URLSearchParams({
+      type: "food",
+      title: food.name_th || "",
+      image: imgSrc,
+      desc: food.description || "",
+      location: food.location || "",
+    });
+    router.push(`/comment?${params.toString()}`);
   };
 
   /* ---------- Image helper ---------- */
@@ -386,6 +403,12 @@ export default function FoodPage() {
                   {/* Action buttons */}
                   <div className="mt-auto d-flex gap-2">
                     <button
+                      className="btn btn-article rounded-pill px-3 btn-sm shadow-sm"
+                      onClick={() => goToArticle(food)}
+                    >
+                      📝 อ่านบทความ
+                    </button>
+                    <button
                       className="btn btn-edit rounded-pill px-3 btn-sm shadow-sm"
                       onClick={() => handleEdit(food)}
                     >
@@ -523,6 +546,11 @@ export default function FoodPage() {
           background: white;
           color: #555;
           border: 1px solid #eee;
+        }
+        .btn-article {
+          background: #ffe08a;
+          color: #000;
+          border: none;
         }
         .btn-edit {
           background: #91f9ae;
