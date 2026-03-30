@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import "bootstrap/dist/css/bootstrap.min.css";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -20,8 +21,14 @@ export default function StarPage() {
   useEffect(() => {
     fetch("http://localhost:3001/articles")
       .then((r) => r.json())
-      .then((data) => { setArticles(data); setLoading(false); })
-      .catch((err) => { console.error("ERROR:", err); setLoading(false); });
+      .then((data) => {
+        setArticles(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("ERROR:", err);
+        setLoading(false);
+      });
   }, []);
 
   const allComments = articles.flatMap((a) => a.comments || []);
@@ -38,94 +45,70 @@ export default function StarPage() {
       {
         label: "รีวิว",
         data: [star5, star4, star3, star2, star1],
-        backgroundColor: ["#29c4e3", "#2ecc71", "#f1c40f", "#e67e22", "#e74c3c"],
+        backgroundColor: [
+          "#29c4e3",
+          "#2ecc71",
+          "#f1c40f",
+          "#e67e22",
+          "#e74c3c",
+        ],
       },
     ],
   };
 
   return (
-    <div style={container}>
-      {/* ปุ่มขวาบน */}
-      <div style={topBar}>
-        <button style={backBtn} onClick={() => router.push("/comment")}>
-          ⬅ กลับหน้าบทความ
-        </button>
-      </div>
+    <div className="bg-white min-vh-100">
+      <div className="container py-5">
 
-      <h1 style={title}>📊 Dashboard</h1>
+        {/* 🔙 ปุ่ม */}
+        <div className="d-flex justify-content-end mb-3">
+          <button
+            className="btn btn-primary"
+            onClick={() => router.push("/comment")}
+          >
+            ⬅ กลับหน้าบทความ
+          </button>
+        </div>
 
-      <div style={card}>
-        <h3 style={{ textAlign: "center" }}>คะแนนรีวิวบทความ</h3>
+        {/* Title */}
+        <h1 className="text-center fw-bold mb-4">
+          📊 Dashboard
+        </h1>
 
-        {loading ? (
-          <p style={{ textAlign: "center" }}>Loading...</p>
-        ) : allComments.length === 0 ? (
-          <p style={{ textAlign: "center" }}>❌ ไม่มีข้อมูล</p>
-        ) : (
-          <div style={chartBox}>
-            <Pie data={data} />
+        {/* Card */}
+        <div className="card shadow mx-auto" style={{ maxWidth: "600px" }}>
+          <div className="card-body">
+
+            <h5 className="text-center mb-4">
+              คะแนนรีวิวบทความ
+            </h5>
+
+            {loading ? (
+              <p className="text-center">Loading...</p>
+            ) : allComments.length === 0 ? (
+              <p className="text-center text-danger">❌ ไม่มีข้อมูล</p>
+            ) : (
+              <div
+                className="d-flex justify-content-center"
+                style={{ height: "400px" }}
+              >
+                <Pie data={data} />
+              </div>
+            )}
+
+            {/* Summary */}
+            <div className="row text-center mt-4">
+              <div className="col-6 col-md-4">5 ★: {star5}</div>
+              <div className="col-6 col-md-4">4 ★: {star4}</div>
+              <div className="col-6 col-md-4">3 ★: {star3}</div>
+              <div className="col-6 col-md-4">2 ★: {star2}</div>
+              <div className="col-6 col-md-4">1 ★: {star1}</div>
+            </div>
+
           </div>
-        )}
-      </div>
+        </div>
 
-      <div style={summarySimple}>
-        <p>5 ★: {star5}</p>
-        <p>4 ★: {star4}</p>
-        <p>3 ★: {star3}</p>
-        <p>2 ★: {star2}</p>
-        <p>1 ★: {star1}</p>
       </div>
     </div>
   );
 }
-
-/* ================= STYLE ================= */
-
-const container = {
-  padding: "40px",
-  minHeight: "100vh",
-  background: "#f5f6fa",
-  position: "relative",
-};
-
-const topBar = {
-  position: "absolute",
-  top: "20px",
-  right: "40px",
-};
-
-const title = {
-  textAlign: "center",
-  marginBottom: "30px",
-};
-
-const card = {
-  width: "600px",
-  margin: "0 auto",
-  background: "#fff",
-  padding: "30px",
-  borderRadius: "15px",
-  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-};
-
-const chartBox = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "400px",
-};
-
-const summarySimple = {
-  marginTop: "20px",
-  textAlign: "center",
-  fontSize: "16px",
-};
-
-const backBtn = {
-  padding: "10px 20px",
-  background: "#3498db",
-  color: "#fff",
-  border: "none",
-  borderRadius: "8px",
-  cursor: "pointer",
-};

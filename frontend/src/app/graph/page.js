@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import "bootstrap/dist/css/bootstrap.min.css"; 
 import {
   Chart as ChartJS,
   ArcElement,
@@ -41,8 +42,6 @@ export default function BlogPage() {
     (u) => u.gender?.toLowerCase() === "female"
   ).length;
 
-  const total = male + female;
-
   const data = {
     labels: ["Male", "Female"],
     datasets: [
@@ -55,87 +54,51 @@ export default function BlogPage() {
   };
 
   return (
-    <div style={container}>
-      {/* ปุ่มขวาบน */}
-      <div style={topBar}>
-        <button style={backBtn} onClick={() => router.push("/account")}>
-          ⬅ กลับหน้าผู้ใช้
-        </button>
-      </div>
+    <div className="bg-white min-vh-100"> {/* ✅ ทำพื้นหลังขาวทั้งหน้า */}
+      <div className="container py-5">
 
-      <h1 style={title}>📊 Dashboard</h1>
-
-      {/* 🔥 เพิ่มระยะห่าง */}
-      <div style={card}>
-        <h3 style={{ textAlign: "center" }}>จำนวนผู้ใช้ในระบบ</h3>
-
-        {loading ? (
-          <p style={{ textAlign: "center" }}>Loading...</p>
-        ) : users.length === 0 ? (
-          <p style={{ textAlign: "center" }}>❌ ไม่มีข้อมูล</p>
-        ) : (
-          <div style={chartBox}>
-            <Pie data={data} />
-          </div>
-        )}
-      </div>
-
-        <div style={summarySimple}>
-           <p>Male: {male}</p>
-           <p>Female: {female}</p>
+        {/* 🔙 ปุ่มกลับ */}
+        <div className="d-flex justify-content-end mb-3">
+          <button
+            className="btn btn-primary"
+            onClick={() => router.push("/account")}
+          >
+            ⬅ กลับหน้าผู้ใช้
+          </button>
         </div>
+
+        {/* Title */}
+        <h1 className="text-center mb-4">📊 Dashboard</h1>
+
+        {/* Card */}
+        <div className="card shadow mx-auto" style={{ maxWidth: "600px" }}>
+          <div className="card-body">
+
+            <h5 className="text-center mb-4">จำนวนผู้ใช้ในระบบ</h5>
+
+            {loading ? (
+              <p className="text-center">Loading...</p>
+            ) : users.length === 0 ? (
+              <p className="text-center text-danger">❌ ไม่มีข้อมูล</p>
+            ) : (
+              <div
+                className="d-flex justify-content-center"
+                style={{ height: "400px" }}
+              >
+                <Pie data={data} />
+              </div>
+            )}
+
+            {/* Summary */}
+            <div className="text-center mt-4">
+              <p className="mb-1">👨 Male: {male}</p>
+              <p className="mb-0">👩 Female: {female}</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
-
-/* ================= STYLE ================= */
-
-const container = {
-  padding: "40px",
-  minHeight: "100vh",
-  background: "#f5f6fa",
-  position: "relative",
-};
-
-const topBar = {
-  position: "absolute",
-  top: "20px",
-  right: "40px",
-};
-
-/* 🔥 เพิ่ม marginBottom */
-const title = {
-  textAlign: "center",
-  marginBottom: "30px", // 👈 ห่างจากการ์ด
-};
-
-const card = {
-  width: "600px",
-  margin: "0 auto",
-  background: "#fff",
-  padding: "30px",
-  borderRadius: "15px",
-  boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-};
-
-const chartBox = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "400px",
-};
-
-const summarySimple = {
-  marginTop: "20px",
-  textAlign: "center",
-  fontSize: "16px",
-};
-
-const backBtn = {
-  padding: "10px 20px",
-  background: "#3498db",
-  color: "#fff",
-  border: "none",
-  borderRadius: "8px",
-  cursor: "pointer",
-};
