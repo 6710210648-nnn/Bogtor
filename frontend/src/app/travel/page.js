@@ -2,13 +2,98 @@
 
 import { useRouter } from "next/navigation";
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+
+/* ================= STYLES ================= */
+
+// -- Nav (used in Header) --
+const navLinkStyle = {
+  textDecoration: "none",
+  color: "#1e1d1d",
+  paddingBottom: "4px",
+  borderBottom: "2px solid transparent",
+  cursor: "pointer",
+};
+
+const logoutBtnStyle = {
+  padding: "6px 14px",
+  borderRadius: "6px",
+  border: "1px solid #ff6f61",
+  backgroundColor: "white",
+  color: "#ff6f61",
+  fontWeight: "600",
+  cursor: "pointer",
+  marginLeft: "24px",
+};
+
+// -- Modal --
+const modalOverlay = {
+  position: "fixed",
+  inset: 0,
+  background: "rgba(0,0,0,0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 999,
+};
+
+const modalStyle = {
+  background: "white",
+  padding: "20px",
+  borderRadius: "10px",
+  width: "400px",
+  maxHeight: "90vh",
+  overflowY: "auto",
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "8px",
+  margin: "5px 0",
+  borderRadius: "5px",
+  border: "1px solid #ccc",
+};
+
+const previewImg = {
+  width: "120px",
+  height: "120px",
+  objectFit: "cover",
+  marginBottom: "10px",
+  borderRadius: "8px",
+};
+
+const previewPlaceholder = {
+  width: "120px",
+  height: "120px",
+  background: "#eee",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginBottom: "10px",
+  borderRadius: "8px",
+};
+
+const saveBtn = {
+  flex: 1,
+  padding: "8px",
+  background: "green",
+  color: "white",
+  border: "none",
+  borderRadius: "5px",
+};
+
+const cancelBtn = {
+  flex: 1,
+  padding: "8px",
+  background: "red",
+  color: "white",
+  border: "none",
+  borderRadius: "5px",
+};
 
 /* ================= HEADER ================= */
 function Header() {
   const router = useRouter();
-
-  
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -33,14 +118,7 @@ function Header() {
         alt="BOGTOR Logo"
         style={{ width: "60px", height: "60px", marginRight: "20px" }}
       />
-      <h1
-        style={{
-          fontWeight: "700",
-          fontSize: "28px",
-          color: "#333",
-          margin: 0,
-        }}
-      >
+      <h1 style={{ fontWeight: "700", fontSize: "28px", color: "#333", margin: 0 }}>
         HAT YAI TRAVEL & FOOD
       </h1>
 
@@ -55,7 +133,7 @@ function Header() {
         }}
       >
         <a href="/dashboard" style={navLinkStyle}>หน้าแรก</a>
-         <a href="/graph_travel" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>
+        <a href="/graph_travel" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>
           ประเภทสถานที่
         </a>
         <a href="/food" style={navLinkStyle}>ร้านอาหาร</a>
@@ -67,34 +145,35 @@ function Header() {
       </nav>
     </header>
   );
-
 }
 
 /* ================= PAGE ================= */
+const EMPTY_FORM = {
+  id: null,
+  title_th: "",
+  title_en: "",
+  description: "",
+  category: "",
+  location_address: "",
+  map_url: "",
+  opening_hours: "",
+  image: "",
+};
+
 export default function TravelPage() {
-        const [travelData, setTravelData] = useState([]);
-        const [loading, setLoading] = useState(true);
-        const [searchTerm, setSearchTerm] = useState("");
-        const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
+  const router = useRouter();
 
-  // ✨ Modal state
-        const [isOpen, setIsOpen] = useState(false);
-        const [isEdit, setIsEdit] = useState(false);
-         const [form, setForm] = useState({
-         id: null,
-         title_th: "",
-         title_en: "",
-         description: "", // แก้สะกดให้ตรงกับ Backend
-         category: "",    // ใช้ตัวเล็กให้หมด
-         location_address: "",
-         map_url: "",
-         opening_hours: "",
-         image_url: "",
-    });
+  const [travelData, setTravelData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("ทั้งหมด");
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
   const [uploading, setUploading] = useState(false);
 
-  // Fetch
+  /* ---- Fetch ---- */
   const fetchTravelData = async () => {
     try {
       setLoading(true);
@@ -107,120 +186,105 @@ export default function TravelPage() {
       setLoading(false);
     }
   };
+
   useEffect(() => { fetchTravelData(); }, []);
 
-  const categories = ["ทั้งหมด", ...new Set(travelData.map(item => item.category ))];
+  /* ---- Derived data ---- */
+  const categories = ["ทั้งหมด", ...new Set(travelData.map((item) => item.category))];
 
   const filteredPlaces = travelData.filter((place) => {
-  const matchesSearch = (place.title_th?.toLowerCase().includes(searchTerm.toLowerCase())) || 
-                          (place.title_en?.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesCategory = selectedCategory === "ทั้งหมด" || (place.category ) === selectedCategory;
+    const matchesSearch =
+      place.title_th?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      place.title_en?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "ทั้งหมด" || place.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  // ✨ ปุ่มเพิ่มสถานที่
+  /* ---- Handlers ---- */
   const handleAdd = () => {
     setIsEdit(false);
-    setForm({
-      id: null,
-      title_th: "",
-      title_en: "",
-      description: "",
-      category: "",
-      location_address: "",
-      map_url: "",
-      opening_hours: "",
-      image: "",
-    });
+    setForm(EMPTY_FORM);
     setIsOpen(true);
   };
 
-  // ✨ ปุ่มแก้ไขสถานที่
   const handleEdit = (place) => {
     setIsEdit(true);
     setForm({ ...place, image: place.image || "" });
     setIsOpen(true);
   };
 
-  // ✨ Upload รูป (ตัวอย่าง)
- const handleUpload = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  setUploading(true);
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("image", file);
 
-  const formData = new FormData();
-  formData.append("image", file);
-
-  try {
-    const res = await fetch("http://localhost:3001/upload", {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
-    setForm((prev) => ({ ...prev, image: data.imageUrl }));
-  } catch (err) {
-    alert("Upload ไม่สำเร็จ");
-  } finally {
-    setUploading(false);
-  }
-};
-
-  // ✨ Save (POST / PUT)
-const handleSave = async () => {
-  try {
-    const url = isEdit
-      ? `http://localhost:3001/travel/${form.id}`
-      : "http://localhost:3001/travel";
-
-    const method = isEdit ? "PUT" : "POST";
-
-    const payload = {
-       title_th: form.title_th || "No Title",
-       title_en: form.title_en || "No Title",
-       description: form.description || "",
-       category: form.category || "ทั่วไป",
-       location_address: form.location_address || "",
-       map_url: form.map_url || "",
-       opening_hours: form.opening_hours || "",
-       image_url: form.image || "default.jpg"
-};
-
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.log("❌ Backend error:", data);
-      throw new Error("Save failed");
+    try {
+      const res = await fetch("http://localhost:3001/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      setForm((prev) => ({ ...prev, image: data.imageUrl }));
+    } catch (err) {
+      alert("Upload ไม่สำเร็จ");
+    } finally {
+      setUploading(false);
     }
+  };
 
-    setIsOpen(false);
-    fetchTravelData();
+  const handleSave = async () => {
+    try {
+      const url = isEdit
+        ? `http://localhost:3001/travel/${form.id}`
+        : "http://localhost:3001/travel";
+      const method = isEdit ? "PUT" : "POST";
 
-  } catch (err) {
-    console.error("🔥 Save Error:", err);
-    alert("บันทึกไม่สำเร็จ!");
-  }
-};
+      const payload = {
+        title_th: form.title_th || "No Title",
+        title_en: form.title_en || "No Title",
+        description: form.description || "",
+        category: form.category || "ทั่วไป",
+        location_address: form.location_address || "",
+        map_url: form.map_url || "",
+        opening_hours: form.opening_hours || "",
+        image_url: form.image || "default.jpg",
+      };
 
-  // ✨ ลบ
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log("❌ Backend error:", data);
+        throw new Error("Save failed");
+      }
+
+      setIsOpen(false);
+      fetchTravelData();
+    } catch (err) {
+      console.error("Save Error:", err);
+      alert("บันทึกไม่สำเร็จจ้า!");
+    }
+  };
+
   const handleDelete = async (id) => {
     if (!confirm("ต้องการลบจริงๆ หรออ้วน?")) return;
-    await fetch(`http://localhost:3001/travel/${id}`, { method: 'DELETE' });
+    await fetch(`http://localhost:3001/travel/${id}`, { method: "DELETE" });
     fetchTravelData();
   };
 
-  // Styles ของ Modal
-  const router = useRouter();
-
   const goToArticle = (place) => {
     const imgSrc = place.image
-      ? (place.image.startsWith("http") ? place.image : `http://localhost:3001/uploads/${place.image}`)
+      ? place.image.startsWith("http")
+        ? place.image
+        : `http://localhost:3001/uploads/${place.image}`
       : "";
     const params = new URLSearchParams({
       type: "travel",
@@ -232,24 +296,22 @@ const handleSave = async () => {
     router.push(`/comment?${params.toString()}`);
   };
 
-  const modalOverlay = { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display:'flex', justifyContent:'center', alignItems:'center', zIndex: 999 };
-  const modalStyle = { background:'white', padding:'20px', borderRadius:'10px', width:'400px', maxHeight:'90vh', overflowY:'auto' };
-  const inputStyle = { width:'100%', padding:'8px', margin:'5px 0', borderRadius:'5px', border:'1px solid #ccc' };
-  const previewImg = { width:'120px', height:'120px', objectFit:'cover', marginBottom:'10px', borderRadius:'8px' };
-  const previewPlaceholder = { width:'120px', height:'120px', background:'#eee', display:'flex', justifyContent:'center', alignItems:'center', marginBottom:'10px', borderRadius:'8px' };
-  const saveBtn = { flex:1, padding:'8px', background:'green', color:'white', border:'none', borderRadius:'5px' };
-  const cancelBtn = { flex:1, padding:'8px', background:'red', color:'white', border:'none', borderRadius:'5px' };
-
+  /* ---- Render ---- */
   return (
     <div className="bg-light min-vh-100">
       <Header />
 
-      <div className="container py-5" style={{ maxWidth: '1000px' }}>
+      <div className="container py-5" style={{ maxWidth: "1000px" }}>
+
+        {/* Title */}
         <div className="d-flex justify-content-between align-items-end mb-4 border-bottom pb-4">
           <h2 className="fw-bold mb-1">สำรวจหาดใหญ่กับ BOGTOR 🚌</h2>
-          <button className="btn btn-outline-dark btn-sm rounded-pill px-3" onClick={handleAdd}>เพิ่มสถานที่</button>
+          <button className="btn btn-outline-dark btn-sm rounded-pill px-3" onClick={handleAdd}>
+            เพิ่มสถานที่
+          </button>
         </div>
 
+        {/* Search */}
         <div className="mb-4">
           <input
             type="text"
@@ -260,106 +322,163 @@ const handleSave = async () => {
           />
         </div>
 
+        {/* Category Filter */}
         <div className="d-flex flex-wrap gap-2 mb-4">
-          {categories.map(cat => (
+          {categories.map((cat) => (
             <button
               key={cat}
-              className={`btn btn-sm rounded-pill px-3 transition-all ${selectedCategory === cat ? 'btn-dark':'btn-white shadow-sm'}`}
+              className={`btn btn-sm rounded-pill px-3 transition-all ${
+                selectedCategory === cat ? "btn-dark" : "btn-white shadow-sm"
+              }`}
               onClick={() => setSelectedCategory(cat)}
-            >{cat}</button>
+            >
+              {cat}
+            </button>
           ))}
         </div>
 
+        {/* Empty State */}
         {!loading && filteredPlaces.length === 0 && (
-          <div className="text-center py-5"><p>ไม่พบสถานที่ท่องเที่ยว 🔍</p></div>
+          <div className="text-center py-5">
+            <p>ไม่พบสถานที่ท่องเที่ยว 🔍</p>
+          </div>
         )}
 
-          {!loading && filteredPlaces.map((place) => {
-  const imgSrc = place.image
-    ? place.image.startsWith("http") ? place.image : `http://localhost:3001/uploads/${place.image}`
-    : "/placeholder.jpg";
+        {/* Cards */}
+        {!loading &&
+          filteredPlaces.map((place) => {
+            const imgSrc = place.image
+              ? place.image.startsWith("http")
+                ? place.image
+                : `http://localhost:3001/uploads/${place.image}`
+              : "/placeholder.jpg";
 
-  return (
-    <div key={place.id} className="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 hover-shadow">
-      <div className="row g-0">
+            return (
+              <div key={place.id} className="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 hover-shadow">
+                <div className="row g-0">
 
-        {/* Image */}
-        <div className="col-md-4">
-          <img
-            src={imgSrc}
-            alt={place.title_th}
-            className="img-fluid h-100 w-100"
-            style={{ objectFit: "cover", minHeight: "250px" }}
-            onError={(e) => { e.target.src = "https://via.placeholder.com/400x250?text=No+Image"; e.target.onerror = null; }}
-          />
-        </div>
+                  {/* Image */}
+                  <div className="col-md-4">
+                    <img
+                      src={imgSrc}
+                      alt={place.title_th}
+                      className="img-fluid h-100 w-100"
+                      style={{ objectFit: "cover", minHeight: "250px" }}
+                      onError={(e) => {
+                        e.target.src = "https://via.placeholder.com/400x250?text=No+Image";
+                        e.target.onerror = null;
+                      }}
+                    />
+                  </div>
 
-        {/* Content */}
-        <div className="col-md-8 d-flex flex-column justify-content-center p-4">
-          <span className="badge bg-secondary-subtle text-secondary mb-2 fw-normal">{place.category || "หาดใหญ่"}</span>
-          <h4 className="fw-bold mb-0 text-dark">{place.title_th}</h4>
-          <span className="text-primary small fw-medium text-uppercase mb-2">{place.title_en}</span>
+                  {/* Content */}
+                  <div className="col-md-8 d-flex flex-column justify-content-center p-4">
+                    <span className="badge bg-secondary-subtle text-secondary mb-2 fw-normal">
+                      {place.category || "หาดใหญ่"}
+                    </span>
+                    <h4 className="fw-bold mb-0 text-dark">{place.title_th}</h4>
+                    <span className="text-primary small fw-medium text-uppercase mb-2">{place.title_en}</span>
 
-          <p className="text-secondary small mb-3" 
-             style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-            {place.description}
-          </p>
+                    <p
+                      className="text-secondary small mb-3"
+                      style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+                    >
+                      {place.description}
+                    </p>
 
-          <div className="bg-light p-3 rounded-3 mb-3" style={{ fontSize: "0.85rem" }}>
-            <div className="d-flex mb-2"><i className="bi bi-geo-alt text-danger me-2" />
-            <span className="text-dark truncate">{place.location_address}</span></div>
-            <div className="d-flex">       <i className="bi bi-clock text-muted me-2"  />
-            <span className="text-dark">{place.opening_hours}</span></div>
-          </div>
+                    <div className="bg-light p-3 rounded-3 mb-3" style={{ fontSize: "0.85rem" }}>
+                      <div className="d-flex mb-2">
+                        <i className="bi bi-geo-alt text-danger me-2" />
+                        <span className="text-dark truncate">{place.location_address}</span>
+                      </div>
+                      <div className="d-flex">
+                        <i className="bi bi-clock text-muted me-2" />
+                        <span className="text-dark">{place.opening_hours}</span>
+                      </div>
+                    </div>
 
-          <div className="mt-auto d-flex gap-2">
-            <button className="btn btn-article rounded-pill px-3 btn-sm" onClick={() => goToArticle(place)}>
-              📝 อ่านบทความ</button>
-            <button className="btn btn-maps   rounded-pill px-3 btn-sm" onClick={() => window.open(place.map_url, "_blank")}>
-              <i className="bi bi-pin-map-fill me-1" /> Maps</button>
-            <button className="btn btn-edit   rounded-pill px-3 btn-sm" onClick={() => handleEdit(place)}>แก้ไข</button>
-            <button className="btn btn-delete rounded-pill px-3 btn-sm" onClick={() => handleDelete(place.id)}>ลบ</button>
-          </div>
-        </div>
+                    <div className="mt-auto d-flex gap-2">
+                      <button className="btn btn-article rounded-pill px-3 btn-sm" onClick={() => goToArticle(place)}>
+                        📝 อ่านบทความ
+                      </button>
+                      <button className="btn btn-maps rounded-pill px-3 btn-sm" onClick={() => window.open(place.map_url, "_blank")}>
+                        <i className="bi bi-pin-map-fill me-1" /> Maps
+                      </button>
+                      <button className="btn btn-edit rounded-pill px-3 btn-sm" onClick={() => handleEdit(place)}>
+                        แก้ไข
+                      </button>
+                      <button className="btn btn-delete rounded-pill px-3 btn-sm" onClick={() => handleDelete(place.id)}>
+                        ลบ
+                      </button>
+                    </div>
+                  </div>
 
-      </div>
-    </div>
-  );
-})}
+                </div>
+              </div>
+            );
+          })}
 
-        {/* ✨ Modal */}
+        {/* Modal */}
         {isOpen && (
           <div style={modalOverlay}>
             <div style={modalStyle}>
               <h3>{isEdit ? "แก้ไขสถานที่" : "เพิ่มสถานที่"}</h3>
 
               <div style={{ textAlign: "center" }}>
-                {form.image ? <img src={form.image} style={previewImg}/> : <div style={previewPlaceholder}>No Image</div>}
-                <input type="file" onChange={handleUpload}/>
-                {uploading && <p> Uploading...</p>}
+                {form.image
+                  ? <img src={form.image} style={previewImg} />
+                  : <div style={previewPlaceholder}>No Image</div>
+                }
+                <input type="file" onChange={handleUpload} />
+                {uploading && <p>Uploading...</p>}
               </div>
 
-              <input placeholder="ชื่อไทย" style={inputStyle} value={form.title_th || ''}
-                     onChange={(e)=>setForm({...form,title_th:e.target.value})}/>
-              <input placeholder="ชื่ออังกฤษ" style={inputStyle} value={form.title_en} 
-                     onChange={(e)=>setForm({...form,title_en:e.target.value})}/>
-              <input placeholder="Category" style={inputStyle} value={form.category} 
-                    onChange={(e)=>setForm({...form,category:e.target.value})}/>
-              <input placeholder="ที่อยู่" style={inputStyle} value={form.location_address}
-                     onChange={(e)=>setForm({...form,location_address:e.target.value})}/>
-              <input placeholder="เวลาเปิด" style={inputStyle} value={form.opening_hours} 
-                     onChange={(e)=>setForm({...form,opening_hours:e.target.value})}/>
-              <input placeholder="URL แผนที่" style={inputStyle} value={form.map_url} 
-                     onChange={(e)=>setForm({...form,map_url:e.target.value})}/>
-             <input 
-                     placeholder="รายละเอียด" 
-                     style={inputStyle} 
-                     value={form.description} 
-                     onChange={(e) => setForm({ ...form, description: e.target.value })} 
-             />
-              <div style={{ display:"flex", gap:"10px", marginTop:"10px" }}>
+              <input
+                placeholder="ชื่อไทย"
+                style={inputStyle}
+                value={form.title_th || ""}
+                onChange={(e) => setForm({ ...form, title_th: e.target.value })}
+              />
+              <input
+                placeholder="ชื่ออังกฤษ"
+                style={inputStyle}
+                value={form.title_en}
+                onChange={(e) => setForm({ ...form, title_en: e.target.value })}
+              />
+              <input
+                placeholder="Category"
+                style={inputStyle}
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+              />
+              <input
+                placeholder="ที่อยู่"
+                style={inputStyle}
+                value={form.location_address}
+                onChange={(e) => setForm({ ...form, location_address: e.target.value })}
+              />
+              <input
+                placeholder="เวลาเปิด"
+                style={inputStyle}
+                value={form.opening_hours}
+                onChange={(e) => setForm({ ...form, opening_hours: e.target.value })}
+              />
+              <input
+                placeholder="URL แผนที่"
+                style={inputStyle}
+                value={form.map_url}
+                onChange={(e) => setForm({ ...form, map_url: e.target.value })}
+              />
+              <input
+                placeholder="รายละเอียด"
+                style={inputStyle}
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+              />
+
+              <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
                 <button style={saveBtn} onClick={handleSave}>Save</button>
-                <button style={cancelBtn} onClick={()=>setIsOpen(false)}>Cancel</button>
+                <button style={cancelBtn} onClick={() => setIsOpen(false)}>Cancel</button>
               </div>
             </div>
           </div>
@@ -383,50 +502,24 @@ const handleSave = async () => {
           color: #555;
           border: 1px solid #eee;
         }
-
         .btn-article {
           background: #ffe08a;
           color: #000;
           border: none;
         }
-
         .btn-maps {
-          background: #8ef2ff; 
-          color: #000000;       
-       
+          background: #8ef2ff;
+          color: #000000;
         }
-
-       .btn-edit {
-         background: #91f9ae;
-         color: #000000;       
-          
-       }
-
-      .btn-delete {
-        background: #d24141; 
-        color: #000000;       
-      }
-
+        .btn-edit {
+          background: #91f9ae;
+          color: #000000;
+        }
+        .btn-delete {
+          background: #d24141;
+          color: #000000;
+        }
       `}</style>
     </div>
   );
 }
-/* ================= STYLE ================= */
-const navLinkStyle = {
-  textDecoration: "none",
-  color: "#1e1d1d",
-  paddingBottom: "4px",
-  borderBottom: "2px solid transparent",
-  cursor: "pointer",
-};
-
-const logoutBtnStyle = {
-  padding: "6px 14px",
-  borderRadius: "6px",
-  border: "1px solid #ff6f61",
-  backgroundColor: "white",
-  color: "#ff6f61",
-  fontWeight: "600",
-  cursor: "pointer",
-  marginLeft: "24px",
-};
