@@ -24,9 +24,9 @@ function Header() {
         <a href="/travel" className="nav-link">สถานที่ท่องเที่ยว</a>
         <a href="/food" className="nav-link">ร้านอาหาร</a>
         <a href="/comment" className="nav-link">บทความ</a>
-        <a href="/graph" className="nav-link text-warning border-bottom border-warning">
-          ข้อมูลผู้ใช้
-        </a>
+        <a href="/graph" className="nav-link"
+          style={{ color: "#ff6600", borderBottom: "3px solid #ff6600"}}
+          >ข้อมูลผู้ใช้</a>
         <button onClick={handleLogout} className="btn btn-outline-danger btn-sm">
           Logout
         </button>
@@ -129,7 +129,7 @@ export default function AdminPage() {
     <>
       <Header />
 
-      {/* 🌄 BACKGROUND */}
+      {/* BACKGROUND */}
       <div
         style={{
           minHeight: "100vh",
