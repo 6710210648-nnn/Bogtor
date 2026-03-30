@@ -182,8 +182,9 @@ export default function CommentPage() {
   if (view === "list") {
     return (
       <>
+      <style>{`body { background-color: #ffffff !important; }`}</style>
         <Header />
-        <div className="container py-5">
+        <div className="container py-5 bg-white min-vh-100">
           <button className="btn btn-outline-secondary mb-4" onClick={() => router.back()}>← ย้อนกลับ</button>
 
           {/* ✅ Banner */}
