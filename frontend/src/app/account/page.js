@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-/* ================= HEADER (ห้ามแก้) ================= */
+/* ================= HEADER ================= */
 function Header() {
   const router = useRouter();
 
@@ -14,47 +15,23 @@ function Header() {
   };
 
   return (
-    <header
-      style={{
-        backgroundColor: "#fff",
-        display: "flex",
-        alignItems: "center",
-        padding: "10px 40px",
-        boxShadow: "0 1px 6px rgb(0 0 0 / 0.1)",
-        position: "sticky",
-        top: 0,
-        zIndex: 10,
-      }}
-    >
-      <img
-        src="/logo.PNG"
-        alt="BOGTOR Logo"
-        style={{ width: "60px", height: "60px", marginRight: "20px" }}
-      />
-      <h1 style={{ fontWeight: "700", fontSize: "28px", color: "#333", margin: 0 }}>
-        HAT YAI TRAVEL & FOOD
-      </h1>
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
+      <img src="/logo.PNG" width="50" className="me-3" />
+      <span className="navbar-brand fw-bold">HAT YAI TRAVEL & FOOD</span>
 
-      <nav
-        style={{
-          marginLeft: "auto",
-          display: "flex",
-          gap: "24px",
-          fontWeight: "600",
-          fontSize: "16px",
-          color: "#555",
-        }}
-      >
-        <a href="/dashboard" style={navLinkStyle}>หน้าแรก</a>
-        <a href="/travel" style={navLinkStyle}>สถานที่ท่องเที่ยว</a>
-        <a href="/food" style={navLinkStyle}>ร้านอาหาร</a>
-        <a href="/comment" style={navLinkStyle}>บทความ</a>
-        <a href="/graph" style={{ ...navLinkStyle, color: "#e85d04", borderBottom: "2px solid #e85d04" }}>
-          ข้อมูลผู้ใช้
-        </a>
-        <button onClick={handleLogout} style={logoutBtnStyle}>Logout</button>
-      </nav>
-    </header>
+      <div className="ms-auto d-flex gap-3">
+        <a href="/dashboard" className="nav-link">หน้าแรก</a>
+        <a href="/travel" className="nav-link">สถานที่ท่องเที่ยว</a>
+        <a href="/food" className="nav-link">ร้านอาหาร</a>
+        <a href="/comment" className="nav-link">บทความ</a>
+        <a href="/graph" className="nav-link"
+          style={{ color: "#ff6600", borderBottom: "3px solid #ff6600"}}
+          >ข้อมูลผู้ใช้</a>
+        <button onClick={handleLogout} className="btn btn-outline-danger btn-sm">
+          Logout
+        </button>
+      </div>
+    </nav>
   );
 }
 
@@ -132,9 +109,9 @@ export default function AdminPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-              ...form,
-            password: "1234"
-}),
+          ...form,
+          password: "1234",
+        }),
       });
     }
 
@@ -151,164 +128,173 @@ export default function AdminPage() {
   return (
     <>
       <Header />
-      <div style={container}>
-        <div style={tableBox}>
-          <div style={topBar}>
-            <input
-              placeholder="Search here..."
-              style={searchInput}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
 
-            <button
-              style={addBtn}
-              onClick={() => {
-                setIsEdit(false);
-                setForm({
-                  name: "",
-                  email: "",
-                  phone: "",
-                  gender: "",
-                  image_url: "",
-                });
-                setIsOpen(true);
-              }}
-            >
-              + Add New
-            </button>
-          </div>
+      {/* BACKGROUND */}
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundImage: "url('/lolo.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          padding: "20px",
+        }}
+      >
+        <div className="container">
+          <div className="card shadow p-3 bg-white bg-opacity-75">
 
-          <table style={table}>
-            <thead>
-              <tr style={thead}>
-                <th></th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Gender</th>
-                <th>Action</th>
-              </tr>
-            </thead>
+            {/* TOP BAR */}
+            <div className="d-flex justify-content-between mb-3">
+              <input
+                className="form-control w-25"
+                placeholder="Search here..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
 
-            <tbody>
-              {filteredUsers.map((u) => (
-                <tr
-                  key={u.id}
-                  style={row}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "#f5f6fa")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "#fff")
-                  }
-                >
-                  <td style={{ padding: "12px" }}>
-                    {u.image_url ? (
-                      <img src={u.image_url} style={avatar} />
-                    ) : (
-                      <div style={{ ...avatar, background: "#ccc" }} />
-                    )}
-                  </td>
+              <button
+                className="btn btn-success"
+                onClick={() => {
+                  setIsEdit(false);
+                  setForm({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    gender: "",
+                    image_url: "",
+                  });
+                  setIsOpen(true);
+                }}
+              >
+                + Add New
+              </button>
+            </div>
 
-                  <td style={{ padding: "12px" }}>{u.name}</td>
-                  <td style={{ padding: "12px" }}>{u.email}</td>
-                  <td style={{ padding: "12px" }}>{u.phone}</td>
-                  <td style={{ padding: "12px" }}>{u.gender}</td>
-
-                  <td style={{ padding: "12px" }}>
-                    <button
-                      style={editBtn}
-                      onClick={() => {
-                        setIsEdit(true);
-                        setSelected(u);
-                        setForm(u);
-                        setIsOpen(true);
-                      }}
-                    >
-                      <FaEdit />
-                    </button>
-
-                    <button
-                      style={deleteBtnSmall}
-                      onClick={() => handleDelete(u.id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
+            {/* TABLE */}
+            <table className="table table-hover align-middle">
+              <thead className="table-light">
+                <tr>
+                  <th></th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Gender</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {filteredUsers.map((u) => (
+                  <tr key={u.id}>
+                    <td>
+                      {u.image_url ? (
+                        <img
+                          src={u.image_url}
+                          width="60"
+                          height="60"
+                          className="rounded-circle"
+                        />
+                      ) : (
+                        <div className="bg-secondary rounded-circle" style={{ width: 60, height: 60 }} />
+                      )}
+                    </td>
+
+                    <td>{u.name}</td>
+                    <td>{u.email}</td>
+                    <td>{u.phone}</td>
+                    <td>{u.gender}</td>
+
+                    <td>
+                      <button
+                        className="btn btn-outline-success btn-sm me-2"
+                        onClick={() => {
+                          setIsEdit(true);
+                          setSelected(u);
+                          setForm(u);
+                          setIsOpen(true);
+                        }}
+                      >
+                        <FaEdit />
+                      </button>
+
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => handleDelete(u.id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+          </div>
         </div>
       </div>
 
+      {/* MODAL */}
       {isOpen && (
-        <div style={modalOverlay}>
-          <div style={modal}>
-            <h3>{isEdit ? "แก้ไขผู้ใช้" : "เพิ่มผู้ใช้"}</h3>
+        <div className="modal d-block" style={{ background: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog">
+            <div className="modal-content p-3">
 
-            <div style={{ textAlign: "center" }}>
-              {form.image_url ? (
-                <img src={form.image_url} style={previewImg} />
-              ) : (
-                <div style={previewPlaceholder}>No Image</div>
-              )}
+              <h5>{isEdit ? "แก้ไขผู้ใช้" : "เพิ่มผู้ใช้"}</h5>
 
-              <input type="file" onChange={handleUpload} />
-              {uploading && <p>⏳ Uploading...</p>}
-            </div>
+              <div className="text-center mb-2">
+                {form.image_url ? (
+                  <img src={form.image_url} width="100" className="rounded-circle mb-2" />
+                ) : (
+                  <div className="bg-secondary rounded-circle mx-auto mb-2" style={{ width: 100, height: 100 }} />
+                )}
 
-            <input
-              placeholder="ชื่อ"
-              style={inputStyle}
-              value={form.name}
-              onChange={(e) =>
-                setForm({ ...form, name: e.target.value })
-              }
-            />
+                <input type="file" className="form-control" onChange={handleUpload} />
+                {uploading && <p>⏳ Uploading...</p>}
+              </div>
 
-            <input
-              placeholder="Email"
-              style={inputStyle}
-              value={form.email}
-              onChange={(e) =>
-                setForm({ ...form, email: e.target.value })
-              }
-            />
+              <input
+                className="form-control mb-2"
+                placeholder="ชื่อ"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
 
-            <input
-              placeholder="เบอร์โทร"
-              style={inputStyle}
-              value={form.phone}
-              onChange={(e) =>
-                setForm({ ...form, phone: e.target.value })
-              }
-            />
+              <input
+                className="form-control mb-2"
+                placeholder="Email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
 
-            <select
-              style={inputStyle}
-              value={form.gender}
-              onChange={(e) =>
-                setForm({ ...form, gender: e.target.value })
-              }
-            >
-              <option value="">เลือกเพศ</option>
-              <option value="male">ชาย</option>
-              <option value="female">หญิง</option>
-            </select>
+              <input
+                className="form-control mb-2"
+                placeholder="เบอร์โทร"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              />
 
-            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-              <button style={saveBtn} onClick={handleSave}>
-                💾 Save
-              </button>
-
-              <button
-                style={cancelBtn}
-                onClick={() => setIsOpen(false)}
+              <select
+                className="form-select mb-3"
+                value={form.gender}
+                onChange={(e) => setForm({ ...form, gender: e.target.value })}
               >
-                Cancel
-              </button>
+                <option value="">เลือกเพศ</option>
+                <option value="male">ชาย</option>
+                <option value="female">หญิง</option>
+              </select>
+
+              <div className="d-flex gap-2">
+                <button className="btn btn-success w-50" onClick={handleSave}>
+                  💾 Save
+                </button>
+
+                <button
+                  className="btn btn-secondary w-50"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+
             </div>
           </div>
         </div>
@@ -316,151 +302,3 @@ export default function AdminPage() {
     </>
   );
 }
-
-/* ================= STYLE ================= */
-const navLinkStyle = { textDecoration: "none", color: "#555" };
-const logoutBtnStyle = {
-  padding: "6px 14px",
-  border: "1px solid #ff6f61",
-  backgroundColor: "white",
-  color: "#ff6f61",
-};
-
-const container = {
-  padding: "20px",
-  minHeight: "100vh",
-  backgroundImage: "url('/lolo.jpg')", // ใส่ชื่อรูปตรงนี้
-  backgroundSize: "cover",
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
-};
-
-const tableBox = {
-  background: "rgba(255,255,255,0.95)",
-  padding: "20px",
-  borderRadius: "10px",
-  maxWidth: "1400px",   // กำหนดความกว้าง
-  margin: "0 auto",     // จัดให้อยู่กลาง
-};
-
-const topBar = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginBottom: "15px",
-};
-
-const searchInput = {
-  width: "250px",
-  padding: "8px",
-  borderRadius: "20px",
-  border: "1px solid #ccc",
-};
-
-const table = {
-  width: "100%",
-  borderCollapse: "separate",
-  borderSpacing: "0 10px",
-};
-
-const thead = {
-  textAlign: "left",
-  borderBottom: "1px solid #ddd",
-};
-
-const row = {
-  background: "#fff",
-  boxShadow: "0 1px 6px rgba(0,0,0,0.05)",
-  transition: "0.2s",
-};
-
-const avatar = {
-  width: "80px",
-  height: "80px",
-  borderRadius: "50%",
-  objectFit: "cover",
-};
-
-const editBtn = {
-  marginRight: "8px",
-  border: "1px solid #2ecc71",
-  background: "white",
-  color: "#2ecc71",
-  padding: "6px",
-  cursor: "pointer",
-};
-
-const deleteBtnSmall = {
-  border: "1px solid #e74c3c",
-  background: "white",
-  color: "#e74c3c",
-  padding: "6px",
-  cursor: "pointer",
-};
-
-const addBtn = {
-  background: "#2ecc71",
-  color: "#fff",
-  padding: "10px 16px",
-  borderRadius: "20px",
-  border: "none",
-};
-
-const modalOverlay = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  background: "rgba(0,0,0,0.4)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-};
-
-const modal = {
-  background: "#fff",
-  padding: "20px",
-  borderRadius: "10px",
-  width: "300px",
-  display: "flex",
-  flexDirection: "column",
-  gap: "10px",
-};
-
-const inputStyle = {
-  padding: "8px",
-  border: "1px solid #ccc",
-  borderRadius: "6px",
-};
-
-const saveBtn = {
-  background: "#2ecc71",
-  color: "#fff",
-  padding: "8px",
-  border: "none",
-};
-
-const cancelBtn = {
-  background: "#ccc",
-  padding: "8px",
-  border: "none",
-};
-
-const previewImg = {
-  width: "100px",
-  height: "100px",
-  borderRadius: "50%",
-  objectFit: "cover",
-  marginBottom: "10px",
-};
-
-const previewPlaceholder = {
-  width: "100px",
-  height: "100px",
-  borderRadius: "50%",
-  background: "#ddd",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  margin: "0 auto 10px",
-};

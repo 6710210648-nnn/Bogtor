@@ -255,13 +255,6 @@ app.delete("/travel/:id", (req, res) => {
   });
 });
 
-// ================= START =================
-app.listen(PORT, () => {
-  console.log(`🚀 Server running http://localhost:${PORT}`);
-});
-
-
-
 // ================= ARTICLES =================
 
 // GET all articles (พร้อม comments)
@@ -335,4 +328,84 @@ app.post("/comments", (req, res) => {
     }
   );
 });
+ 
 
+// ================= FOOD CRUD =================
+ 
+//ดึงข้อมูลจากฐานข้อมูล + ค้นหา
+app.get("/food", (req, res) => {
+  const search = req.query.search || "";
+  const sql = `
+    SELECT * FROM food
+    WHERE name_th LIKE ? OR name_en LIKE ? OR location LIKE ?
+    ORDER BY id ASC
+  `;
+  db.query(sql, [`%${search}%`, `%${search}%`, `%${search}%`], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(result);
+  });
+});
+ 
+// ดูรายละเอียดแต่ละ id
+app.get("/food/:id", (req, res) => {
+  db.query("SELECT * FROM food WHERE id=?", [req.params.id], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (result.length === 0) return res.status(404).json({ message: "Not found" });
+    res.json(result[0]);
+  });
+});
+ 
+// เพิ่มข้อมูล
+app.post("/food", (req, res) => {
+  const { name_th, name_en, type, description, location, opening_hours, image_url } = req.body;
+  const sql = `
+    INSERT INTO food (name_th, name_en, type, description, location, opening_hours, image)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  db.query(
+    sql,
+    [name_th, name_en, type, description || "", location, opening_hours, image_url || ""],
+    (err, result) => {
+      if (err) {
+        console.error("❌ Food Insert Error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ success: true, id: result.insertId });
+    }
+  );
+});
+ 
+// แก้ไข อัพเดตข้อมูล
+app.put("/food/:id", (req, res) => {
+  const { name_th, name_en, type, description, location, opening_hours, image_url } = req.body;
+  const sql = `
+    UPDATE food
+    SET name_th=?, name_en=?, type=?, description=?, location=?, opening_hours=?, image=?
+    WHERE id=?
+  `;
+  db.query(
+    sql,
+    [name_th, name_en, type, description || "", location, opening_hours, image_url || "", req.params.id],
+    (err, result) => {
+      if (err) {
+        console.error("❌ Food Update Error:", err);
+        return res.status(500).json({ error: err.message });
+      }
+      if (result.affectedRows === 0) return res.status(404).json({ message: "Food not found" });
+      res.json({ success: true });
+    }
+  );
+});
+ 
+// ลบข้อมูล
+app.delete("/food/:id", (req, res) => {
+  db.query("DELETE FROM food WHERE id=?", [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true, message: "Deleted successfully" });
+  });
+});
+
+// ================= START =================
+app.listen(PORT, () => {
+  console.log(`🚀 Server running http://localhost:${PORT}`);
+});

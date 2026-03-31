@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 export default function Dashboard() {
@@ -29,7 +30,6 @@ export default function Dashboard() {
       img:"/HatyaiPark.jpg",
       description: "สวนสวย บรรยากาศดี",
     },
-
     {
       titleTH: "ตลาดกิมหยง",
       titleEN: "Gim Yong Market",
@@ -43,7 +43,7 @@ export default function Dashboard() {
       description: "เจดีย์สวยงามโดดเด่น",
     },
     {
-      titleTH: "มัสยิดกลางจังหวัดสงขลา",
+      titleTH: "มัสยิดกลางประจำจังหวัดสงขลา",
       titleEN: "Central Mosque of Songkhla at Hat Yai Sorsqua",
       img: "/mussayid.jpg",
       description: "มัสยิดที่สำคัญของสงขลา",
@@ -72,11 +72,33 @@ export default function Dashboard() {
     },
   ];
 
+  const goToPlace = (place) => {
+    const params = new URLSearchParams({
+      type: "travel",
+      title: place.titleTH || "",
+      image: place.img || "",
+      desc: place.description || "",
+      location: "",
+    });
+    router.push(`/comment?${params.toString()}`);
+  };
+
+  const goToFood = (food) => {
+    const params = new URLSearchParams({
+      type: "food",
+      title: food.nameTH || "",
+      image: food.img || "",
+      desc: food.description || "",
+      location: food.location || "",
+    });
+    router.push(`/comment?${params.toString()}`);
+  };
+
   return (
     <div
       style={{
         fontFamily: "'Sarabun', sans-serif, Arial",
-        backgroundColor: "white", // พื้นหลังขาว
+        backgroundColor: "white",
         minHeight: "100vh",
       }}
     >
@@ -142,25 +164,25 @@ export default function Dashboard() {
       </header>
 
       {/* Banner */}
-<section
-  style={{
-    position: "relative",
-    backgroundImage: "url('/images/momo.jpg')", 
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    height: "320px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "white",
-    textShadow: "0 2px 8px rgba(0,0,0,0.7)",
-    fontWeight: "700",
-    fontSize: "36px",
-    textAlign: "center",
-  }}
->
+      <section
+        style={{
+          position: "relative",
+          backgroundImage: "url('/images/momo.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "320px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "white",
+          textShadow: "0 2px 8px rgba(0,0,0,0.7)",
+          fontWeight: "700",
+          fontSize: "36px",
+          textAlign: "center",
+        }}
+      >
         ค้นพบเสน่ห์หาดใหญ่
         <p style={{ fontSize: "18px", fontWeight: "400", marginTop: "12px" }}>
           รวมที่เที่ยว ที่กิน ยอดฮิตในอำเภอหาดใหญ่ จังหวัดสงขลา
@@ -221,11 +243,10 @@ export default function Dashboard() {
                   {titleEN}
                 </p>
                 <button
-                
                   style={cardBtnStyle}
+                  onClick={() => goToPlace({ titleTH, img, description })}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#0053ba")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#0069d9")}
-                  
                 >
                   อ่านเพิ่มเติม
                 </button>
@@ -289,9 +310,11 @@ export default function Dashboard() {
                 </p>
                 <button
                   style={cardBtnStyle}
+                  onClick={() => goToFood({ nameTH, img, description, location })}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#0053ba")}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#0069d9")}
                 >
+                  
                   อ่านเพิ่มเติม
                 </button>
               </div>
